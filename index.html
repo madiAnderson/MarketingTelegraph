@@ -4,613 +4,595 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Telegraph Marketing Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.8.1/prop-types.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.1.9/Recharts.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:#10173D;font-family:'Poppins',sans-serif;color:#F0F2F5;min-height:100vh}
-  ::-webkit-scrollbar{width:6px}
-  ::-webkit-scrollbar-track{background:#10173D}
-  ::-webkit-scrollbar-thumb{background:#2A3362;border-radius:3px}
-  button:focus{outline:none}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#10173D;font-family:'Poppins',sans-serif;color:#F0F2F5;min-height:100vh;padding:24px 18px 60px}
+.card{background:#182048;border:1px solid #2A3362;border-radius:12px;padding:16px}
+.kpi-grid{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.kpi{background:#182048;border:1px solid #2A3362;border-radius:12px;padding:14px 16px;flex:1 1 130px;min-width:120px}
+.kpi-label{font-size:10px;font-weight:600;color:#5C6370;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+.kpi-value{font-size:22px;font-weight:800;color:#F0F2F5;line-height:1}
+.kpi-sub{font-size:10px;color:#9BA3B0;margin-top:4px}
+.tab-row{display:flex;background:#10173D;border-radius:10px;max-width:420px;margin:0 auto 14px;border:1px solid #2A3362;overflow:hidden}
+.tab-btn{flex:1;padding:10px 14px;border:none;cursor:pointer;font-weight:700;font-size:12px;font-family:'Poppins',sans-serif;background:#10173D;color:#5C6370;transition:all .2s}
+.tab-btn.active{background:#34FFA4;color:#10173D}
+.pill-row{display:flex;gap:6px;justify-content:center;margin-bottom:24px;flex-wrap:wrap}
+.pill{padding:6px 14px;border-radius:20px;border:1px solid #2A3362;cursor:pointer;font-weight:600;font-size:11px;font-family:'Poppins',sans-serif;background:transparent;color:#5C6370;transition:all .2s}
+.pill.active{background:rgba(52,255,164,.12);border-color:#34FFA4;color:#34FFA4}
+.sec{display:flex;align-items:center;gap:8px;margin:26px 0 12px}
+.sec h3{font-size:13px;font-weight:700;color:#F0F2F5;margin:0}
+.sec-sub{font-size:10px;color:#5C6370;margin-top:1px}
+.story{background:linear-gradient(135deg,#182048 0%,#0D1535 100%);border:1px solid rgba(52,255,164,.2);border-radius:12px;padding:16px 18px;margin-top:22px}
+.story-title{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.story-bar{width:3px;height:14px;border-radius:2px;background:#34FFA4;flex-shrink:0}
+.story-text{font-size:12px;line-height:1.8;color:#9BA3B0}
+.ep-row{background:#182048;border-radius:10px;padding:11px 14px;border:1px solid #2A3362;display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.ep-num{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.side-by-side{display:flex;gap:12px;flex-wrap:wrap;align-items:stretch}
+.half-card{flex:1 1 280px;background:#182048;border:1px solid #2A3362;border-radius:12px;padding:16px;display:flex;flex-direction:column}
+.post-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.type-tag{font-size:9px;padding:1px 6px;border-radius:8px;font-weight:600}
+.progress-bar{height:4px;border-radius:2px;background:#2A3362;overflow:hidden;margin-top:5px}
+.progress-fill{height:100%;border-radius:2px}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#10173D}
+::-webkit-scrollbar-thumb{background:#2A3362;border-radius:3px}
+button:focus{outline:none}
+canvas{max-height:220px}
 </style>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel">
-const { useState, useMemo } = React;
-const { AreaChart, Area, ComposedChart, Bar, XAxis, YAxis, Tooltip,
-  ResponsiveContainer, CartesianGrid, Line, ReferenceLine, PieChart, Pie, Cell } = window.Recharts;
 
+<div id="app"></div>
+
+<script>
 const LAST_UPDATED = "April 1, 2026";
-const BENCH = { engGoal:6, engIndustryLo:4, impGoal:550, impIndustry:160, followerGrowthGoal:3.5, reactionsGoal:10 };
 const C = {
-  bgDark:"#10173D", bgCard:"#182048", bgDeep:"#0D1535", border:"#2A3362",
-  green:"#34FFA4", greenDim:"rgba(52,255,164,0.12)", greenMuted:"rgba(52,255,164,0.5)",
-  periwinkle:"#C2D8FF", periwinkleDim:"rgba(194,216,255,0.12)",
-  red:"#EF6461", redDim:"rgba(239,100,97,0.12)",
-  blue:"#6C9CFC", yellow:"#FFD166",
-  white:"#FFF", t1:"#F0F2F5", t2:"#9BA3B0", t3:"#5C6370",
+  green:"#34FFA4", greenDim:"rgba(52,255,164,0.12)",
+  periwinkle:"#C2D8FF", blue:"#6C9CFC", yellow:"#FFD166",
+  red:"#EF6461", border:"#2A3362", bgCard:"#182048", bgDeep:"#0D1535",
+  t1:"#F0F2F5", t2:"#9BA3B0", t3:"#5C6370"
 };
-const TYPE_COLORS = {
-  "Picture":C.green, "Video":C.periwinkle, "Graphic":C.blue, "Link":C.yellow, "Poll":"#C084FC"
-};
+const TYPE_COLORS = {Picture:C.green, Video:C.periwinkle, Graphic:C.blue, Link:C.yellow, Poll:"#C084FC"};
 
-const LI_JAN_26 = [
-  {date:"Jan 7", title:"DDOT S2 Teaser",                  type:"Graphic",  imp:301,  eng:5.98,  likes:8,  clicks:9},
-  {date:"Jan 8", title:"DDOT S2 Ep 1 Launch",             type:"Link",     imp:774,  eng:3.36,  likes:9,  clicks:16},
-  {date:"Jan 9", title:"Poll: Freight Rail NY Resolution", type:"Poll",     imp:364,  eng:1.65,  likes:1,  clicks:5},
-  {date:"Jan 13",title:"Sydney Fleet Clip",                type:"Video",    imp:481,  eng:7.28,  likes:8,  clicks:26},
-  {date:"Jan 14",title:"AITX Partnership",                 type:"Link",     imp:1240, eng:11.77, likes:47, clicks:87},
-  {date:"Jan 15",title:"Charlie at MARS",                  type:"Picture",  imp:1482, eng:17.61, likes:48, clicks:211},
-  {date:"Jan 16",title:"Poll: Biggest Impact",             type:"Poll",     imp:247,  eng:3.24,  likes:1,  clicks:7},
-  {date:"Jan 21",title:"Year in Review Video",             type:"Video",    imp:740,  eng:12.30, likes:22, clicks:62},
-  {date:"Jan 22",title:"DDOT S2 Ep2 Clip",                 type:"Video",    imp:488,  eng:6.15,  likes:6,  clicks:23},
-  {date:"Jan 27",title:"Talk Track: STB",                  type:"Link",     imp:784,  eng:6.51,  likes:18, clicks:32},
-  {date:"Jan 29",title:"Market Consist PDF",               type:"Link",     imp:371,  eng:33.96, likes:12, clicks:110},
-  {date:"Jan 30",title:"Podcast Poll",                     type:"Poll",     imp:260,  eng:6.15,  likes:3,  clicks:12},
+const LI_JAN=[
+  {date:"Jan 7",title:"DDOT S2 Teaser",type:"Graphic",imp:301,eng:5.98,likes:8,clicks:9},
+  {date:"Jan 8",title:"DDOT S2 Ep 1 Launch",type:"Link",imp:774,eng:3.36,likes:9,clicks:16},
+  {date:"Jan 9",title:"Poll: Freight Rail NY Resolution",type:"Poll",imp:364,eng:1.65,likes:1,clicks:5},
+  {date:"Jan 13",title:"Sydney Fleet Clip",type:"Video",imp:481,eng:7.28,likes:8,clicks:26},
+  {date:"Jan 14",title:"AITX Partnership",type:"Link",imp:1240,eng:11.77,likes:47,clicks:87},
+  {date:"Jan 15",title:"Charlie at MARS",type:"Picture",imp:1482,eng:17.61,likes:48,clicks:211},
+  {date:"Jan 16",title:"Poll: Biggest Impact",type:"Poll",imp:247,eng:3.24,likes:1,clicks:7},
+  {date:"Jan 21",title:"Year in Review Video",type:"Video",imp:740,eng:12.30,likes:22,clicks:62},
+  {date:"Jan 22",title:"DDOT S2 Ep2 Clip",type:"Video",imp:488,eng:6.15,likes:6,clicks:23},
+  {date:"Jan 27",title:"Talk Track: STB",type:"Link",imp:784,eng:6.51,likes:18,clicks:32},
+  {date:"Jan 29",title:"Market Consist PDF",type:"Link",imp:371,eng:33.96,likes:12,clicks:110},
+  {date:"Jan 30",title:"Podcast Poll",type:"Poll",imp:260,eng:6.15,likes:3,clicks:12},
 ];
-const LI_FEB_26 = [
-  {date:"Feb 2", title:"Talk Track #2 Consist",            type:"Link",     imp:239,  eng:5.86,  likes:7,  clicks:7},
-  {date:"Feb 3", title:"Consist Infographic",              type:"Graphic",  imp:574,  eng:35.71, likes:14, clicks:188},
-  {date:"Feb 4", title:"Clip 1 Talk Track",                type:"Video",    imp:319,  eng:10.66, likes:11, clicks:22},
-  {date:"Feb 5", title:"Begin w/ Customer Video",          type:"Video",    imp:375,  eng:15.47, likes:14, clicks:44},
-  {date:"Feb 6", title:"Crystal Ball Poll",                type:"Poll",     imp:291,  eng:3.44,  likes:2,  clicks:8},
-  {date:"Feb 9", title:"Day in Life: Caleb",               type:"Graphic",  imp:823,  eng:77.76, likes:23, clicks:614},
-  {date:"Feb 10",title:"DDOT Ep 2 Teaser",                 type:"Graphic",  imp:373,  eng:5.36,  likes:10, clicks:9},
-  {date:"Feb 11",title:"DDOT Ep 2 Drop",                   type:"Link",     imp:413,  eng:5.81,  likes:10, clicks:14},
-  {date:"Feb 13",title:"Valentine Train Cards",            type:"Graphic",  imp:503,  eng:45.92, likes:18, clicks:210},
-  {date:"Feb 14",title:"Office Valentines",                type:"Picture",  imp:424,  eng:28.07, likes:16, clicks:101},
-  {date:"Feb 16",title:"Madi Amtrak Video",                type:"Video",    imp:939,  eng:11.40, likes:24, clicks:82},
-  {date:"Feb 17",title:"Match Train Game",                 type:"Graphic",  imp:839,  eng:9.89,  likes:9,  clicks:71},
-  {date:"Feb 18",title:"Match Game Results",               type:"Graphic",  imp:326,  eng:7.67,  likes:3,  clicks:21},
-  {date:"Feb 19",title:"Team Onboarding Photo",            type:"Picture",  imp:916,  eng:25.33, likes:23, clicks:207},
-  {date:"Feb 20",title:"DDOT Demurrage Clip",              type:"Video",    imp:282,  eng:7.45,  likes:5,  clicks:16},
-  {date:"Feb 24",title:"Railroads Friends Blog",           type:"Link",     imp:743,  eng:6.86,  likes:11, clicks:37},
-  {date:"Feb 26",title:"6 Degrees Freight Rail",           type:"Video",    imp:576,  eng:9.20,  likes:16, clicks:36},
-  {date:"Feb 27",title:"DDOT Shortlines Clip",             type:"Video",    imp:414,  eng:5.31,  likes:8,  clicks:13},
+const LI_FEB=[
+  {date:"Feb 2",title:"Talk Track #2 Consist",type:"Link",imp:239,eng:5.86,likes:7,clicks:7},
+  {date:"Feb 3",title:"Consist Infographic",type:"Graphic",imp:574,eng:35.71,likes:14,clicks:188},
+  {date:"Feb 4",title:"Clip 1 Talk Track",type:"Video",imp:319,eng:10.66,likes:11,clicks:22},
+  {date:"Feb 5",title:"Begin w/ Customer Video",type:"Video",imp:375,eng:15.47,likes:14,clicks:44},
+  {date:"Feb 6",title:"Crystal Ball Poll",type:"Poll",imp:291,eng:3.44,likes:2,clicks:8},
+  {date:"Feb 9",title:"Day in Life: Caleb",type:"Graphic",imp:823,eng:77.76,likes:23,clicks:614},
+  {date:"Feb 10",title:"DDOT Ep 2 Teaser",type:"Graphic",imp:373,eng:5.36,likes:10,clicks:9},
+  {date:"Feb 11",title:"DDOT Ep 2 Drop",type:"Link",imp:413,eng:5.81,likes:10,clicks:14},
+  {date:"Feb 13",title:"Valentine Train Cards",type:"Graphic",imp:503,eng:45.92,likes:18,clicks:210},
+  {date:"Feb 14",title:"Office Valentines",type:"Picture",imp:424,eng:28.07,likes:16,clicks:101},
+  {date:"Feb 16",title:"Madi Amtrak Video",type:"Video",imp:939,eng:11.40,likes:24,clicks:82},
+  {date:"Feb 17",title:"Match Train Game",type:"Graphic",imp:839,eng:9.89,likes:9,clicks:71},
+  {date:"Feb 18",title:"Match Game Results",type:"Graphic",imp:326,eng:7.67,likes:3,clicks:21},
+  {date:"Feb 19",title:"Team Onboarding Photo",type:"Picture",imp:916,eng:25.33,likes:23,clicks:207},
+  {date:"Feb 20",title:"DDOT Demurrage Clip",type:"Video",imp:282,eng:7.45,likes:5,clicks:16},
+  {date:"Feb 24",title:"Railroads Friends Blog",type:"Link",imp:743,eng:6.86,likes:11,clicks:37},
+  {date:"Feb 26",title:"6 Degrees Freight Rail",type:"Video",imp:576,eng:9.20,likes:16,clicks:36},
+  {date:"Feb 27",title:"DDOT Shortlines Clip",type:"Video",imp:414,eng:5.31,likes:8,clicks:13},
 ];
-const LI_MAR_26 = [
-  {date:"Mar 3", title:"Talk Track #3 — Larry Gross",      type:"Link",     imp:748,  eng:6.28,  likes:13, clicks:30},
-  {date:"Mar 4", title:"Talk Track Clip — Doughnut Hole",  type:"Video",    imp:346,  eng:6.38,  likes:8,  clicks:14},
-  {date:"Mar 5", title:"National Brian Day",               type:"Picture",  imp:346,  eng:15.32, likes:29, clicks:111},
-  {date:"Mar 6", title:"Employee Appreciation Photo Dump", type:"Picture",  imp:964,  eng:70.44, likes:29, clicks:647},
-  {date:"Mar 9", title:"International Women's Day Blog",   type:"Link",     imp:602,  eng:9.47,  likes:17, clicks:40},
-  {date:"Mar 10",title:"All Aboard — Amaro Luna on AI",    type:"Video",    imp:595,  eng:7.90,  likes:10, clicks:34},
-  {date:"Mar 11",title:"Morgan Hein AI Engineer Spotlight",type:"Graphic",  imp:530,  eng:8.30,  likes:22, clicks:20},
-  {date:"Mar 12",title:"Team Childhood Photo Dump",        type:"Picture",  imp:873,  eng:72.39, likes:23, clicks:604},
-  {date:"Mar 16",title:"March Madness — Sweet Sixteen",    type:"Graphic",  imp:549,  eng:8.84,  likes:10, clicks:38},
-  {date:"Mar 17",title:"March Madness — Elite Eight",      type:"Graphic",  imp:287,  eng:10.11, likes:5,  clicks:20},
-  {date:"Mar 18",title:"March Madness — Final Four",       type:"Graphic",  imp:448,  eng:11.00, likes:5,  clicks:37},
-  {date:"Mar 19",title:"March Madness — Championship",     type:"Graphic",  imp:442,  eng:7.69,  likes:3,  clicks:27},
-  {date:"Mar 20",title:"Train Madness Winner",             type:"Graphic",  imp:278,  eng:6.83,  likes:4,  clicks:14},
-  {date:"Mar 24",title:"National Cocktail Day",            type:"Graphic",  imp:712,  eng:63.34, likes:9,  clicks:438},
-  {date:"Mar 25",title:"Talk Track — Hormuz & Freight",    type:"Video",    imp:252,  eng:8.33,  likes:6,  clicks:14},
-  {date:"Mar 27",title:"Talk Track Clip — Shippers",       type:"Video",    imp:251,  eng:10.78, likes:9,  clicks:18},
-  {date:"Mar 28",title:"Talk Track Clip — Oil & Crops",    type:"Video",    imp:120,  eng:14.17, likes:7,  clicks:10},
-  {date:"Mar 29",title:"Talk Track Clip — Middle East",    type:"Video",    imp:107,  eng:10.28, likes:4,  clicks:7},
-  {date:"Mar 30",title:"DDOT Teaser — Tech Adoption",      type:"Graphic",  imp:0,    eng:0,     likes:0,  clicks:0},
+const LI_MAR=[
+  {date:"Mar 3",title:"Talk Track #3 — Larry Gross",type:"Link",imp:748,eng:6.28,likes:13,clicks:30},
+  {date:"Mar 4",title:"Talk Track Clip — Doughnut Hole",type:"Video",imp:346,eng:6.38,likes:8,clicks:14},
+  {date:"Mar 5",title:"National Brian Day",type:"Picture",imp:346,eng:15.32,likes:29,clicks:111},
+  {date:"Mar 6",title:"Employee Appreciation Photo Dump",type:"Picture",imp:964,eng:70.44,likes:29,clicks:647},
+  {date:"Mar 9",title:"International Women's Day Blog",type:"Link",imp:602,eng:9.47,likes:17,clicks:40},
+  {date:"Mar 10",title:"All Aboard — Amaro Luna on AI",type:"Video",imp:595,eng:7.90,likes:10,clicks:34},
+  {date:"Mar 11",title:"Morgan Hein AI Engineer Spotlight",type:"Graphic",imp:530,eng:8.30,likes:22,clicks:20},
+  {date:"Mar 12",title:"Team Childhood Photo Dump",type:"Picture",imp:873,eng:72.39,likes:23,clicks:604},
+  {date:"Mar 16",title:"March Madness — Sweet Sixteen",type:"Graphic",imp:549,eng:8.84,likes:10,clicks:38},
+  {date:"Mar 17",title:"March Madness — Elite Eight",type:"Graphic",imp:287,eng:10.11,likes:5,clicks:20},
+  {date:"Mar 18",title:"March Madness — Final Four",type:"Graphic",imp:448,eng:11.00,likes:5,clicks:37},
+  {date:"Mar 19",title:"March Madness — Championship",type:"Graphic",imp:442,eng:7.69,likes:3,clicks:27},
+  {date:"Mar 20",title:"Train Madness Winner",type:"Graphic",imp:278,eng:6.83,likes:4,clicks:14},
+  {date:"Mar 24",title:"National Cocktail Day",type:"Graphic",imp:712,eng:63.34,likes:9,clicks:438},
+  {date:"Mar 25",title:"Talk Track — Hormuz & Freight",type:"Video",imp:252,eng:8.33,likes:6,clicks:14},
+  {date:"Mar 27",title:"Talk Track Clip — Shippers",type:"Video",imp:251,eng:10.78,likes:9,clicks:18},
+  {date:"Mar 28",title:"Talk Track Clip — Oil & Crops",type:"Video",imp:120,eng:14.17,likes:7,clicks:10},
+  {date:"Mar 29",title:"Talk Track Clip — Middle East",type:"Video",imp:107,eng:10.28,likes:4,clicks:7},
 ];
-const LI_2025_MO = [
-  {m:"Jan",posts:9, avgEng:27.2,reactions:302,clicks:222, followers:27},
-  {m:"Feb",posts:5, avgEng:14.6,reactions:152,clicks:445, followers:24},
-  {m:"Mar",posts:9, avgEng:17.6,reactions:347,clicks:2025,followers:187},
-  {m:"Apr",posts:6, avgEng:13.0,reactions:190,clicks:544, followers:31},
-  {m:"May",posts:8, avgEng:20.5,reactions:198,clicks:1871,followers:23},
+const LI_2025=[
+  {m:"Jan",posts:9,avgEng:27.2,reactions:302,clicks:222,followers:27},
+  {m:"Feb",posts:5,avgEng:14.6,reactions:152,clicks:445,followers:24},
+  {m:"Mar",posts:9,avgEng:17.6,reactions:347,clicks:2025,followers:187},
+  {m:"Apr",posts:6,avgEng:13.0,reactions:190,clicks:544,followers:31},
+  {m:"May",posts:8,avgEng:20.5,reactions:198,clicks:1871,followers:23},
   {m:"Jun",posts:11,avgEng:12.3,reactions:369,clicks:1214,followers:83},
   {m:"Jul",posts:12,avgEng:16.4,reactions:244,clicks:1204,followers:30},
   {m:"Aug",posts:17,avgEng:18.0,reactions:307,clicks:2891,followers:45},
   {m:"Sep",posts:13,avgEng:13.1,reactions:276,clicks:1367,followers:50},
   {m:"Oct",posts:12,avgEng:10.8,reactions:490,clicks:2721,followers:44},
-  {m:"Nov",posts:6, avgEng:11.6,reactions:71, clicks:459, followers:31},
+  {m:"Nov",posts:6,avgEng:11.6,reactions:71,clicks:459,followers:31},
   {m:"Dec",posts:11,avgEng:19.1,reactions:232,clicks:2134,followers:38},
 ];
-const FOLLOWERS_25 = [
-  {m:"Dec '24",t:1665},{m:"Jan",t:1692},{m:"Feb",t:1716},{m:"Mar",t:1903},
-  {m:"Apr",t:1934},{m:"May",t:1957},{m:"Jun",t:2040},{m:"Jul",t:2070},
-  {m:"Aug",t:2115},{m:"Sep",t:2165},{m:"Oct",t:2209},{m:"Nov",t:2240},{m:"Dec",t:2278},
+const GA_JAN=[48,50,80,61,75,70,73,126,86,48,52,120,125,539,445,295,102,79,85,98,109,110,76,54,60,70,153,171,119,61,58];
+const GA_FEB=[52,108,116,106,95,83,53,73,109,125,96,107,109,80,79,89,93,114,101,98,58,39,110,248,168,240,170,174];
+const GA_MAR=[159,260,226,228,241,176,86,53,125,139,95,72,100,33,45,92,79,64,71,61,32,39,72,81,58,79,73,34,26,80,87];
+const GA_2025_SESSIONS=[1706,1495,3631,2101,1828,2282,2042,2251,1802,2392,2524,2538];
+const GA_26_MO=[
+  {m:"Jan",users:3192,sessions:3727,pv:4689},
+  {m:"Feb",users:2657,sessions:3137,pv:4022},
+  {m:"Mar",users:2160,sessions:2076,pv:3538},
 ];
-const GA_JAN_26=[{d:"1",u:46,s:48},{d:"2",u:47,s:50},{d:"3",u:76,s:80},{d:"4",u:59,s:61},{d:"5",u:71,s:75},{d:"6",u:62,s:70},{d:"7",u:66,s:73},{d:"8",u:115,s:126},{d:"9",u:73,s:86},{d:"10",u:39,s:48},{d:"11",u:50,s:52},{d:"12",u:105,s:120},{d:"13",u:113,s:125},{d:"14",u:513,s:539},{d:"15",u:383,s:445},{d:"16",u:243,s:295},{d:"17",u:91,s:102},{d:"18",u:73,s:79},{d:"19",u:79,s:85},{d:"20",u:78,s:98},{d:"21",u:94,s:109},{d:"22",u:96,s:110},{d:"23",u:65,s:76},{d:"24",u:54,s:54},{d:"25",u:59,s:60},{d:"26",u:66,s:70},{d:"27",u:141,s:153},{d:"28",u:148,s:171},{d:"29",u:104,s:119},{d:"30",u:50,s:61},{d:"31",u:56,s:58}];
-const GA_FEB_26=[{d:"1",u:49,s:52},{d:"2",u:84,s:108},{d:"3",u:99,s:116},{d:"4",u:90,s:106},{d:"5",u:78,s:95},{d:"6",u:72,s:83},{d:"7",u:51,s:53},{d:"8",u:68,s:73},{d:"9",u:97,s:109},{d:"10",u:107,s:125},{d:"11",u:84,s:96},{d:"12",u:88,s:107},{d:"13",u:100,s:109},{d:"14",u:77,s:80},{d:"15",u:77,s:79},{d:"16",u:81,s:89},{d:"17",u:87,s:93},{d:"18",u:102,s:114},{d:"19",u:92,s:101},{d:"20",u:95,s:98},{d:"21",u:57,s:58},{d:"22",u:38,s:39},{d:"23",u:95,s:110},{d:"24",u:236,s:248},{d:"25",u:157,s:168},{d:"26",u:216,s:240},{d:"27",u:145,s:170},{d:"28",u:149,s:174}];
-const GA_MAR_26=[{d:"1",u:140,s:159},{d:"2",u:230,s:260},{d:"3",u:205,s:226},{d:"4",u:208,s:228},{d:"5",u:220,s:241},{d:"6",u:158,s:176},{d:"7",u:77,s:86},{d:"8",u:47,s:53},{d:"9",u:114,s:125},{d:"10",u:126,s:139},{d:"11",u:86,s:95},{d:"12",u:65,s:72},{d:"13",u:90,s:100},{d:"14",u:29,s:33},{d:"15",u:40,s:45},{d:"16",u:83,s:92},{d:"17",u:71,s:79},{d:"18",u:57,s:64},{d:"19",u:64,s:71},{d:"20",u:55,s:61},{d:"21",u:28,s:32},{d:"22",u:35,s:39},{d:"23",u:65,s:72},{d:"24",u:73,s:81},{d:"25",u:52,s:58},{d:"26",u:71,s:79},{d:"27",u:65,s:73},{d:"28",u:30,s:34},{d:"29",u:23,s:26},{d:"30",u:72,s:80},{d:"31",u:78,s:87}];
-const GA_2025_MO=[{m:"Jan",users:1359,sessions:1706,pv:2575},{m:"Feb",users:1224,sessions:1495,pv:2383},{m:"Mar",users:2996,sessions:3631,pv:5475},{m:"Apr",users:1543,sessions:2101,pv:3309},{m:"May",users:1435,sessions:1828,pv:2675},{m:"Jun",users:1868,sessions:2282,pv:3711},{m:"Jul",users:1695,sessions:2042,pv:3298},{m:"Aug",users:1809,sessions:2251,pv:3239},{m:"Sep",users:1513,sessions:1802,pv:2566},{m:"Oct",users:2014,sessions:2392,pv:3275},{m:"Nov",users:2271,sessions:2524,pv:3203},{m:"Dec",users:2281,sessions:2538,pv:3124}];
-const GA_26_MO=[{m:"Jan",users:3192,sessions:3727,pv:4689},{m:"Feb",users:2657,sessions:3137,pv:4022},{m:"Mar",users:2160,sessions:2076,pv:3538}];
+const GA_25_MO=[
+  {m:"Jan",users:1359,sessions:1706},{m:"Feb",users:1224,sessions:1495},{m:"Mar",users:2996,sessions:3631},
+];
 
-const POD_ALLTIME=750,POD_LAST7=34,POD_LAST30=65,POD_LAST90=251,POD_PREDICTED=29;
-const POD_TREND=[{m:"Jan '25",d:58},{m:"Feb '25",d:4},{m:"Mar '25",d:4},{m:"Apr '25",d:4},{m:"May '25",d:65},{m:"Jun '25",d:55},{m:"Jul '25",d:10},{m:"Aug '25",d:82},{m:"Sep '25",d:83},{m:"Oct '25",d:62},{m:"Nov '25",d:100},{m:"Dec '25",d:92},{m:"Jan '26",d:85},{m:"Feb '26",d:30},{m:"Mar '26",d:34}];
-const POD_APPS=[{app:"Apple Podcasts",pct:43,count:38,color:"#FC3C44"},{app:"Spotify",pct:22,count:20,color:"#1DB954"},{app:"Web Browser",pct:6,count:5,color:"#6C9CFC"},{app:"Pocket Casts",pct:6,count:5,color:"#F43E37"},{app:"Podcast Addict",pct:6,count:5,color:"#f59e0b"},{app:"Other",pct:17,count:15,color:"#5C6370"}];
-const DDOT_EPS=[{title:"The Age of Visibility",downloads:283,date:"2025"},{title:"Don't Dwell On It: Prototype",downloads:63,date:"2025"},{title:"Much Ado About Shipping",downloads:44,date:"2025"},{title:"DDOT S2 Ep 1",downloads:38,date:"Jan '26"},{title:"DDOT S2 Ep 2",downloads:22,date:"Feb '26"}];
-const TT_EPS=[{title:"Pride + Intermodal",downloads:53,date:"2025"},{title:"A Tale of Two Railroads",downloads:44,date:"2025"},{title:"Talk Track: STB",downloads:28,date:"Jan '26"},{title:"Talk Track #2 Consist",downloads:19,date:"Feb '26"},{title:"Talk Track #3 — Larry Gross",downloads:10,date:"Mar '26"}];
+const POD_TREND=[58,4,4,4,65,55,10,82,83,62,100,92,85,30,34];
+const POD_TREND_LABELS=["Jan '25","Feb '25","Mar '25","Apr '25","May '25","Jun '25","Jul '25","Aug '25","Sep '25","Oct '25","Nov '25","Dec '25","Jan '26","Feb '26","Mar '26"];
+const DDOT_EPS=[{title:"The Age of Visibility",dl:283,date:"2025"},{title:"Don't Dwell On It: Prototype",dl:63,date:"2025"},{title:"Much Ado About Shipping",dl:44,date:"2025"},{title:"DDOT S2 Ep 1",dl:38,date:"Jan '26"},{title:"DDOT S2 Ep 2",dl:22,date:"Feb '26"}];
+const TT_EPS=[{title:"Pride + Intermodal",dl:53,date:"2025"},{title:"A Tale of Two Railroads",dl:44,date:"2025"},{title:"Talk Track: STB",dl:28,date:"Jan '26"},{title:"Talk Track #2 Consist",dl:19,date:"Feb '26"},{title:"Talk Track #3 — Larry Gross",dl:10,date:"Mar '26"}];
 
-const sum=(a,k)=>a.reduce((s,x)=>s+(x[k]||0),0);
-const avg=(a,k)=>a.length?sum(a,k)/a.length:0;
+const sum=(a)=>a.reduce((s,x)=>s+x,0);
+const sumK=(a,k)=>a.reduce((s,x)=>s+(x[k]||0),0);
+const avgK=(a,k)=>a.length?sumK(a,k)/a.length:0;
 const fmt=n=>typeof n==="number"?n.toLocaleString():n;
 
-const Kpi=({label,value,sub})=>(
-  <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:12,padding:"14px 16px",flex:"1 1 140px",minWidth:130}}>
-    <div style={{fontSize:10,fontWeight:600,color:C.t3,textTransform:"uppercase",letterSpacing:0.8,marginBottom:6}}>{label}</div>
-    <div style={{fontSize:22,fontWeight:800,color:C.t1,lineHeight:1}}>{value}</div>
-    {sub&&<div style={{fontSize:10,color:C.t2,marginTop:4}}>{sub}</div>}
-  </div>
-);
-const TabBtn=({active,label,onClick})=>(
-  <button onClick={onClick} style={{flex:1,padding:"10px 14px",border:"none",cursor:"pointer",fontWeight:700,fontSize:12,fontFamily:"'Poppins',sans-serif",background:active?C.green:C.bgDark,color:active?C.bgDark:C.t3,transition:"all 0.2s"}}>{label}</button>
-);
-const PillBtn=({active,label,onClick})=>(
-  <button onClick={onClick} style={{padding:"6px 14px",borderRadius:20,border:`1px solid ${active?C.green:C.border}`,cursor:"pointer",fontWeight:600,fontSize:11,fontFamily:"'Poppins',sans-serif",background:active?C.greenDim:"transparent",color:active?C.green:C.t3,transition:"all 0.2s"}}>{label}</button>
-);
-const Sec=({icon,title,sub})=>(
-  <div style={{display:"flex",alignItems:"center",gap:8,margin:"26px 0 12px"}}>
-    <span style={{fontSize:15}}>{icon}</span>
-    <div>
-      <h3 style={{fontSize:13,fontWeight:700,color:C.t1,margin:0}}>{title}</h3>
-      {sub&&<div style={{fontSize:10,color:C.t3,marginTop:1}}>{sub}</div>}
-    </div>
-  </div>
-);
-const Tip=({active,payload,label})=>{
-  if(!active||!payload||!payload.length)return null;
-  return <div style={{background:C.bgCard,border:`1px solid ${C.border}`,color:C.t1,padding:"8px 12px",borderRadius:8,fontSize:11,boxShadow:"0 8px 24px rgba(0,0,0,0.4)"}}><div style={{fontWeight:700,color:C.green,marginBottom:3}}>{label}</div>{payload.map((p,i)=><div key={i} style={{color:C.t2}}>{p.name}: <span style={{color:C.t1,fontWeight:600}}>{typeof p.value==="number"?p.value.toLocaleString():p.value}</span></div>)}</div>;
-};
-const Story=({title,children})=>(
-  <div style={{background:`linear-gradient(135deg,${C.bgCard} 0%,${C.bgDeep} 100%)`,border:`1px solid ${C.green}33`,borderRadius:12,padding:"16px 18px",marginTop:22}}>
-    <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:10}}>
-      <div style={{width:3,height:14,borderRadius:2,background:C.green}}/>
-      <h4 style={{fontSize:12,fontWeight:700,color:C.green,margin:0}}>{title}</h4>
-    </div>
-    <div style={{fontSize:12,lineHeight:1.8,color:C.t2}}>{children}</div>
-  </div>
-);
-const YoYCard=({label,cur,prev,curLabel,prevLabel})=>{
-  if(!prev||!cur)return null;
-  const change=(((cur-prev)/prev)*100).toFixed(0),up=change>0;
-  return <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:10,padding:"12px 14px",flex:1,minWidth:100}}><div style={{fontSize:9,color:C.t3,fontWeight:600,marginBottom:3,textTransform:"uppercase",letterSpacing:0.6}}>{label} YoY</div><div style={{fontSize:18,fontWeight:800,color:up?C.green:C.red}}>{up?"+":""}{change}%</div><div style={{fontSize:9,color:C.t2,marginTop:2}}>{fmt(cur)} vs {fmt(prev)}</div><div style={{fontSize:9,color:C.t3}}>{curLabel} vs {prevLabel}</div></div>;
-};
+let platform="linkedin", period="ytd", podSeries="all";
+let charts={};
 
-function Dashboard(){
-  const [platform,setPlatform]=useState("linkedin");
-  const [period,setPeriod]=useState("ytd");
-  const [podSeries,setPodSeries]=useState("all");
+function getPosts(){
+  if(period==="jan") return LI_JAN;
+  if(period==="feb") return LI_FEB;
+  if(period==="mar") return LI_MAR;
+  return [...LI_JAN,...LI_FEB,...LI_MAR];
+}
+function getActive(){ return getPosts().filter(p=>p.eng>0); }
 
-  const liAll26=[...LI_JAN_26,...LI_FEB_26,...LI_MAR_26];
-  const curLI=period==="jan"?LI_JAN_26:period==="feb"?LI_FEB_26:period==="mar"?LI_MAR_26:liAll26;
-  const activeLI=curLI.filter(p=>p.eng>0);
-  const pLabel=period==="jan"?"January 2026":period==="feb"?"February 2026":period==="mar"?"March 2026":period==="2025"?"2025 Full Year":"Q1 2026 YTD";
-
-  const liS=useMemo(()=>{
-    const active=curLI.filter(p=>p.eng>0);
-    return {
-      posts:curLI.length, imp:sum(active,"imp"),
-      eng:avg(active,"eng").toFixed(1),
-      clicks:sum(active,"clicks"), likes:sum(active,"likes"),
-      newFollowers:period==="jan"?98:period==="feb"?30:period==="mar"?15:143,
-      totalFollowers:period==="jan"?2335:period==="feb"?2365:period==="mar"?2393:2393,
-    };
-  },[period]);
-
-  const li25t={posts:131,clicks:sum(LI_2025_MO,"clicks"),reactions:sum(LI_2025_MO,"reactions"),followers:sum(LI_2025_MO,"followers"),eng:avg(LI_2025_MO,"avgEng").toFixed(1)};
-  const gaD26YTD=[...GA_JAN_26.map(d=>({...d,d:"J"+d.d})),...GA_FEB_26.map(d=>({...d,d:"F"+d.d})),...GA_MAR_26.map(d=>({...d,d:"M"+d.d}))];
-  const gaDaily=period==="jan"?GA_JAN_26:period==="feb"?GA_FEB_26:period==="mar"?GA_MAR_26:gaD26YTD;
-  const curGA26=period==="jan"?[GA_26_MO[0]]:period==="feb"?[GA_26_MO[1]]:period==="mar"?[GA_26_MO[2]]:GA_26_MO;
-  const gaS=useMemo(()=>({users:sum(curGA26,"users"),sessions:sum(curGA26,"sessions"),pv:sum(curGA26,"pv")}),[period]);
-  const ga25t={users:sum(GA_2025_MO,"users"),sessions:sum(GA_2025_MO,"sessions"),pv:sum(GA_2025_MO,"pv")};
-  const chartData=activeLI.map(p=>({name:p.date.replace(/Jan |Feb |Mar /,""),imp:p.imp,eng:p.eng}));
-
-  const ContentMix=()=>{
-    const counts=activeLI.reduce((acc,p)=>{acc[p.type]=(acc[p.type]||0)+1;return acc;},{});
-    const engByType=activeLI.reduce((acc,p)=>{if(!acc[p.type])acc[p.type]={total:0,count:0};acc[p.type].total+=p.eng;acc[p.type].count+=1;return acc;},{});
-    const data=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
-    const total=data.reduce((s,[,v])=>s+v,0);
-    return (
-      <div>
-        <div style={{height:160,marginBottom:12}}>
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie data={data.map(([name,value])=>({name,value}))} cx="50%" cy="50%" innerRadius={42} outerRadius={68} paddingAngle={3} dataKey="value">
-                {data.map(([name],i)=><Cell key={i} fill={TYPE_COLORS[name]||C.blue}/>)}
-              </Pie>
-              <Tooltip formatter={(v,n)=>[v+" posts",n]}/>
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-        <div style={{display:"flex",flexDirection:"column",gap:8}}>
-          {data.map(([name,count],i)=>{
-            const e=engByType[name];
-            const avgEng=e?(e.total/e.count).toFixed(1):"—";
-            const pct=Math.round((count/total)*100);
-            return (
-              <div key={i}>
-                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3}}>
-                  <div style={{width:10,height:10,borderRadius:2,background:TYPE_COLORS[name]||C.blue,flexShrink:0}}/>
-                  <div style={{fontSize:11,fontWeight:600,color:C.t1,flex:1}}>{name}</div>
-                  <div style={{fontSize:11,fontWeight:700,color:C.t1}}>{count} posts</div>
-                </div>
-                <div style={{paddingLeft:18,display:"flex",gap:10}}>
-                  <div style={{height:4,borderRadius:2,background:C.border,flex:1,overflow:"hidden"}}>
-                    <div style={{width:pct+"%",height:"100%",background:TYPE_COLORS[name]||C.blue,borderRadius:2,opacity:0.7}}/>
-                  </div>
-                  <div style={{fontSize:10,color:C.t3,flexShrink:0,width:90,textAlign:"right"}}>avg {avgEng}% eng · {pct}%</div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
-
-  const TopPosts=()=>{
-    const sorted=[...activeLI].sort((a,b)=>b.eng-a.eng).slice(0,10);
-    return (
-      <div style={{display:"flex",flexDirection:"column",gap:8}}>
-        {sorted.map((p,i)=>{
-          const fc=TYPE_COLORS[p.type]||C.blue;
-          return (
-            <div key={i} style={{display:"flex",alignItems:"flex-start",gap:10}}>
-              <div style={{width:26,height:26,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,flexShrink:0,color:i===0?C.bgDark:C.t1,background:i===0?C.green:i===1?C.border:"transparent",border:i>1?`1px solid ${C.border}`:"none"}}>{i+1}</div>
-              <div style={{flex:1,minWidth:0}}>
-                <div style={{fontWeight:600,color:C.t1,fontSize:11,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{p.title}</div>
-                <div style={{display:"flex",gap:6,alignItems:"center",marginTop:3,flexWrap:"wrap"}}>
-                  <span style={{fontSize:9,padding:"1px 6px",borderRadius:8,background:fc+"22",color:fc,fontWeight:600}}>{p.type}</span>
-                  <span style={{fontSize:9,color:C.t3}}>{p.date}</span>
-                  <span style={{fontSize:9,color:C.t3}}>{fmt(p.imp)} imp</span>
-                  <span style={{fontSize:9,color:C.t3}}>{fmt(p.clicks)} clicks</span>
-                </div>
-                <div style={{marginTop:5,height:3,borderRadius:2,background:C.border,overflow:"hidden"}}>
-                  <div style={{width:Math.min((p.eng/80)*100,100)+"%",height:"100%",background:i===0?C.green:C.periwinkle,borderRadius:2,opacity:0.8}}/>
-                </div>
-              </div>
-              <div style={{textAlign:"right",flexShrink:0}}>
-                <div style={{fontSize:16,fontWeight:800,color:i===0?C.green:C.t1}}>{p.eng.toFixed(1)}%</div>
-                <div style={{fontSize:9,color:C.t3}}>eng</div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
-
-  return (
-    <div style={{fontFamily:"'Poppins',sans-serif",background:C.bgDark,minHeight:"100vh",padding:"24px 18px 60px",color:C.t1}}>
-
-      {/* HEADER */}
-      <div style={{textAlign:"center",marginBottom:24}}>
-        <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:12,padding:"16px 20px",textAlign:"left"}}>
-          <div style={{fontSize:12,fontWeight:700,color:C.t1,marginBottom:8}}>📋 About This Dashboard</div>
-          <p style={{fontSize:11,color:C.t2,margin:"0 0 10px",lineHeight:1.7}}>This dashboard tracks Telegraph's organic marketing performance across LinkedIn, the company website, and our podcast network. Updated monthly — designed to give leadership a clear, data-driven view of content impact, audience growth, and website traffic.</p>
-          <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:10}}>
-            {[{label:"LinkedIn",desc:"Post-level impressions, engagement, clicks, reactions + follower growth benchmarked against industry standards and internal goals."},{label:"Website",desc:"Google Analytics 4 traffic trends, year-over-year growth, and the direct impact of LinkedIn content on site visits."},{label:"Podcast",desc:"Buzzsprout data for Don't Dwell On It + Talk Track — episode downloads, platform breakdown, and listener growth."}].map((item,i)=>(
-              <div key={i} style={{flex:"1 1 160px",background:C.bgDeep,borderRadius:8,padding:"10px 12px",border:`1px solid ${C.border}`}}>
-                <div style={{fontSize:10,fontWeight:700,color:C.green,marginBottom:4}}>{item.label}</div>
-                <div style={{fontSize:10,color:C.t3,lineHeight:1.6}}>{item.desc}</div>
-              </div>
-            ))}
-          </div>
-          <div style={{paddingTop:10,borderTop:`1px solid ${C.border}`,fontSize:10,color:C.t3}}>📡 Data: LinkedIn Organic · Google Analytics 4 · Buzzsprout</div>
-        </div>
-        <div style={{display:"inline-flex",alignItems:"center",gap:6,margin:"28px 0 12px"}}>
-          <div style={{width:8,height:8,borderRadius:"50%",background:C.green,boxShadow:`0 0 14px ${C.greenMuted}`}}/>
-          <span style={{fontSize:11,fontWeight:600,textTransform:"uppercase",letterSpacing:3,color:C.green}}>Telegraph Marketing</span>
-        </div>
-        <h1 style={{fontSize:52,fontWeight:800,color:C.white,margin:"0 0 8px",letterSpacing:-2,lineHeight:1.1}}>Marketing <span style={{color:C.green}}>Dashboard</span></h1>
-        <p style={{color:C.t3,fontSize:14,margin:"0 0 14px",letterSpacing:0.5}}>LinkedIn · Website · Podcast</p>
-        <div style={{display:"inline-flex",alignItems:"center",gap:5,marginBottom:4,background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:20,padding:"6px 16px"}}>
-          <span style={{width:6,height:6,borderRadius:"50%",background:C.yellow,display:"inline-block"}}/>
-          <span style={{fontSize:11,color:C.t3}}>Last updated: <span style={{color:C.t2,fontWeight:600}}>{LAST_UPDATED}</span></span>
-        </div>
-      </div>
-
-      {/* TABS */}
-      <div style={{display:"flex",background:C.bgDark,borderRadius:10,maxWidth:420,margin:"0 auto 14px",border:`1px solid ${C.border}`,overflow:"hidden"}}>
-        <TabBtn active={platform==="linkedin"} label="LinkedIn"    onClick={()=>setPlatform("linkedin")}/>
-        <TabBtn active={platform==="website"}  label="Website"     onClick={()=>setPlatform("website")}/>
-        <TabBtn active={platform==="podcast"}  label="Podcast"     onClick={()=>setPlatform("podcast")}/>
-      </div>
-
-      {platform!=="podcast"&&(
-        <div style={{display:"flex",gap:6,justifyContent:"center",marginBottom:24,flexWrap:"wrap"}}>
-          <PillBtn active={period==="ytd"}  label="Q1 2026 YTD"   onClick={()=>setPeriod("ytd")}/>
-          <PillBtn active={period==="jan"}  label="January"        onClick={()=>setPeriod("jan")}/>
-          <PillBtn active={period==="feb"}  label="February"       onClick={()=>setPeriod("feb")}/>
-          <PillBtn active={period==="mar"}  label="March"          onClick={()=>setPeriod("mar")}/>
-          <PillBtn active={period==="2025"} label="2025 Full Year" onClick={()=>setPeriod("2025")}/>
-        </div>
-      )}
-
-      {/* ── LINKEDIN ── */}
-      {platform==="linkedin"&&(
-        <div>
-          <div style={{textAlign:"center",marginBottom:16}}><span style={{fontSize:15,fontWeight:700}}>{pLabel} · LinkedIn</span></div>
-          {period==="2025"?(
-            <div>
-              <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:8}}>
-                <Kpi label="Total Posts"      value={li25t.posts}         sub="Full year 2025"/>
-                <Kpi label="Avg Engagement"   value={li25t.eng+"%"}       sub="Avg across all posts"/>
-                <Kpi label="Total Clicks"     value={fmt(li25t.clicks)}   sub="Across all posts"/>
-                <Kpi label="Followers Gained" value={li25t.followers}     sub="+613 net organic"/>
-              </div>
-              <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:8}}>
-                <Kpi label="Total Reactions"  value={fmt(li25t.reactions)} sub="Across all posts"/>
-                <Kpi label="Start Followers"  value="1,665"                sub="December 2024"/>
-                <Kpi label="End Followers"    value="2,278"                sub="+37% growth"/>
-              </div>
-              <Sec icon="📊" title="Monthly Posts + Avg Engagement" sub="2025 full year"/>
-              <div style={{background:C.bgCard,borderRadius:12,padding:"14px 8px 4px",border:`1px solid ${C.border}`}}>
-                <ResponsiveContainer width="100%" height={210}>
-                  <ComposedChart data={LI_2025_MO}>
-                    <CartesianGrid strokeDasharray="3 3" stroke={C.border} vertical={false}/>
-                    <XAxis dataKey="m" tick={{fontSize:9,fill:C.t3}} tickLine={false} axisLine={false}/>
-                    <YAxis yAxisId="l" tick={{fontSize:9,fill:C.t3}} tickLine={false} axisLine={false}/>
-                    <YAxis yAxisId="r" orientation="right" tick={{fontSize:9,fill:C.periwinkle}} tickLine={false} axisLine={false} unit="%"/>
-                    <Tooltip content={React.createElement(Tip)}/>
-                    <Bar yAxisId="l" dataKey="posts" name="Posts" fill={C.green} radius={[3,3,0,0]} fillOpacity={0.8}/>
-                    <Line yAxisId="r" dataKey="avgEng" name="Avg Eng %" stroke={C.periwinkle} strokeWidth={2} dot={{r:2,fill:C.periwinkle,strokeWidth:0}}/>
-                  </ComposedChart>
-                </ResponsiveContainer>
-              </div>
-              <Sec icon="👥" title="Follower Growth" sub="December 2024 to December 2025"/>
-              <div style={{background:C.bgCard,borderRadius:12,padding:"14px 8px 4px",border:`1px solid ${C.border}`}}>
-                <ResponsiveContainer width="100%" height={180}>
-                  <AreaChart data={FOLLOWERS_25}>
-                    <defs><linearGradient id="fg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={C.green} stopOpacity={0.3}/><stop offset="100%" stopColor={C.green} stopOpacity={0}/></linearGradient></defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke={C.border} vertical={false}/>
-                    <XAxis dataKey="m" tick={{fontSize:9,fill:C.t3}} tickLine={false} axisLine={false}/>
-                    <YAxis domain={[1600,2400]} tick={{fontSize:9,fill:C.t3}} tickLine={false} axisLine={false}/>
-                    <Tooltip content={React.createElement(Tip)}/>
-                    <Area type="monotone" dataKey="t" name="Followers" stroke={C.green} fill="url(#fg1)" strokeWidth={2}/>
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-              <Story title="2025 Year in Review"><p style={{margin:0}}>Followers grew <span style={{color:C.green,fontWeight:600}}>from 1,665 to 2,278 (+37%)</span>. March surged +187 followers on Afya Foundation + hiring content. October peaked with the Chicago Marathon post at 6,579 impressions. Cadence scaled from ~6 to 17 posts/month.</p></Story>
-            </div>
-          ):(
-            <div>
-              <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:8}}>
-                <Kpi label="Total Posts"       value={liS.posts}              sub={period==="ytd"?"Q1 2026":period==="jan"?"January":period==="feb"?"February":"March"}/>
-                <Kpi label="Total Impressions" value={fmt(liS.imp)}           sub={Math.round(liS.imp/liS.posts).toLocaleString()+" avg per post"}/>
-                <Kpi label="Avg Engagement"    value={liS.eng+"%"}            sub={period==="mar"?"vs 17.6% Mar '25":period==="feb"?"vs 14.6% Feb '25":period==="jan"?"vs 27.2% Jan '25":"Q1 2026"}/>
-                <Kpi label="Total Clicks"      value={fmt(liS.clicks)}        sub={Math.round(liS.clicks/liS.posts)+" avg per post"}/>
-              </div>
-              <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:8}}>
-                <Kpi label="Total Reactions"   value={fmt(liS.likes)}         sub={(liS.likes/liS.posts).toFixed(1)+" avg per post"}/>
-                <Kpi label="New Followers"     value={liS.newFollowers}       sub="Organic this period"/>
-                <Kpi label="Total Followers"   value={fmt(liS.totalFollowers)} sub="End of period"/>
-              </div>
-
-              <Sec icon="📊" title="Post Performance" sub="Impressions per post with engagement rate overlay"/>
-              <div style={{background:C.bgCard,borderRadius:12,padding:"14px 8px 4px",border:`1px solid ${C.border}`}}>
-                <ResponsiveContainer width="100%" height={210}>
-                  <ComposedChart data={chartData} barCategoryGap="12%">
-                    <CartesianGrid strokeDasharray="3 3" stroke={C.border} vertical={false}/>
-                    <XAxis dataKey="name" tick={{fontSize:8,fill:C.t3}} tickLine={false} axisLine={false} interval={period==="ytd"?3:0}/>
-                    <YAxis yAxisId="l" tick={{fontSize:9,fill:C.t3}} tickLine={false} axisLine={false}/>
-                    <YAxis yAxisId="r" orientation="right" tick={{fontSize:9,fill:C.periwinkle}} tickLine={false} axisLine={false} unit="%"/>
-                    <Tooltip content={React.createElement(Tip)}/>
-                    <ReferenceLine yAxisId="l" y={550} stroke={C.green} strokeDasharray="4 3" strokeOpacity={0.35}/>
-                    <ReferenceLine yAxisId="r" y={6} stroke={C.periwinkle} strokeDasharray="4 3" strokeOpacity={0.35}/>
-                    <Bar yAxisId="l" dataKey="imp" name="Impressions" fill={C.green} radius={[3,3,0,0]} fillOpacity={0.85}/>
-                    <Line yAxisId="r" dataKey="eng" name="Eng %" stroke={C.periwinkle} strokeWidth={2} dot={{r:2.5,fill:C.periwinkle,strokeWidth:0}}/>
-                  </ComposedChart>
-                </ResponsiveContainer>
-                <div style={{display:"flex",justifyContent:"center",gap:16,padding:"4px 0",fontSize:10,color:C.t3}}>
-                  <span style={{display:"flex",alignItems:"center",gap:4}}><span style={{width:6,height:6,background:C.green,borderRadius:2}}/>Impressions</span>
-                  <span style={{display:"flex",alignItems:"center",gap:4}}><span style={{width:6,height:6,background:C.periwinkle,borderRadius:2}}/>Eng %</span>
-                </div>
-              </div>
-
-              <Sec icon="🥧" title="Content Breakdown + Top Posts" sub="Format mix and avg engagement · Top 10 posts by engagement rate"/>
-              <div style={{display:"flex",gap:12,flexWrap:"wrap",alignItems:"stretch"}}>
-                <div style={{flex:"1 1 280px",background:C.bgCard,borderRadius:12,padding:"16px",border:`1px solid ${C.border}`,display:"flex",flexDirection:"column"}}>
-                  <div style={{fontSize:11,fontWeight:700,color:C.t1,marginBottom:12}}>Content Mix</div>
-                  <ContentMix/>
-                </div>
-                <div style={{flex:"1 1 280px",background:C.bgCard,borderRadius:12,padding:"16px",border:`1px solid ${C.border}`,display:"flex",flexDirection:"column"}}>
-                  <div style={{fontSize:11,fontWeight:700,color:C.t1,marginBottom:12}}>Top 10 by Engagement</div>
-                  <TopPosts/>
-                </div>
-              </div>
-
-              <Story title={pLabel+" — Key Takeaways"}>
-                {period==="jan"&&<p style={{margin:0}}>January was headlined by <span style={{color:C.green,fontWeight:600}}>AITX Partnership</span> (1,240 imp, 47 reactions) + <span style={{color:C.green,fontWeight:600}}>Charlie at MARS</span> (1,482 imp, 17.6% eng). Market Consist PDF hit 34% engagement with 110 clicks. Closed with +98 new followers, the strongest single month in Telegraph history at that time.</p>}
-                {period==="feb"&&<p style={{margin:0}}><span style={{color:C.green,fontWeight:600}}>Day in the Life: Caleb dominated</span> with 77.8% engagement + 614 clicks. Valentine's content averaged 37% combined. The Railroads Friends blog sparked a late-month website surge that became the #2 most visited page. 18 posts = 3.6x February 2025 cadence.</p>}
-                {period==="mar"&&<p style={{margin:0}}>March was defined by <span style={{color:C.green,fontWeight:600}}>people-first content dominating</span> — Employee Appreciation (70.4% eng, 647 clicks) + Team Childhood Photos (72.4% eng, 604 clicks). National Cocktail Day hit 63.3%. 4 of the top 5 posts were team photos or spotlights.</p>}
-                {period==="ytd"&&<p style={{margin:0}}><span style={{color:C.green,fontWeight:600}}>49 posts in Q1 2026</span> vs. 23 same period in 2025 — more than doubled. All three months cleared the 6% engagement goal. The content formula: <span style={{color:C.green,fontWeight:600}}>team photos + interactive formats + industry analysis</span>. +143 followers in Q1.</p>}
-              </Story>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* ── WEBSITE ── */}
-      {platform==="website"&&(
-        <div>
-          <div style={{textAlign:"center",marginBottom:16}}><span style={{fontSize:15,fontWeight:700}}>{pLabel} · Website</span></div>
-          {period==="2025"?(
-            <div>
-              <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:8}}>
-                <Kpi label="Total Users"    value={fmt(ga25t.users)}    sub="Full year 2025"/>
-                <Kpi label="Total Sessions" value={fmt(ga25t.sessions)} sub="Full year 2025"/>
-                <Kpi label="Page Views"     value={fmt(ga25t.pv)}       sub="Full year 2025"/>
-              </div>
-              <Sec icon="📈" title="Monthly Traffic" sub="2025 full year"/>
-              <div style={{background:C.bgCard,borderRadius:12,padding:"14px 8px 4px",border:`1px solid ${C.border}`}}>
-                <ResponsiveContainer width="100%" height={210}>
-                  <ComposedChart data={GA_2025_MO}>
-                    <CartesianGrid strokeDasharray="3 3" stroke={C.border} vertical={false}/>
-                    <XAxis dataKey="m" tick={{fontSize:9,fill:C.t3}} tickLine={false} axisLine={false}/>
-                    <YAxis tick={{fontSize:9,fill:C.t3}} tickLine={false} axisLine={false}/>
-                    <Tooltip content={React.createElement(Tip)}/>
-                    <Bar dataKey="sessions" name="Sessions" fill={C.green} radius={[3,3,0,0]} fillOpacity={0.8}/>
-                    <Bar dataKey="users"    name="Users"    fill={C.blue}  radius={[3,3,0,0]} fillOpacity={0.6}/>
-                  </ComposedChart>
-                </ResponsiveContainer>
-              </div>
-              <Story title="2025 Website Year in Review"><p style={{margin:0}}>Telegraph.io attracted <span style={{color:C.green,fontWeight:600}}>22K+ users and 26.6K sessions</span>. March peaked at 3,631 sessions. Oct–Dec averaged 2,485 sessions/month vs. 1,676 in Q1.</p></Story>
-            </div>
-          ):(
-            <div>
-              <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:8}}>
-                <Kpi label="Active Users"   value={gaS.users>0?fmt(gaS.users):"—"}      sub={period==="jan"?"January 2026":period==="feb"?"February 2026":period==="mar"?"March 2026":"Q1 2026 total"}/>
-                <Kpi label="Sessions"       value={gaS.sessions>0?fmt(gaS.sessions):"—"} sub={period==="jan"?"January 2026":period==="feb"?"February 2026":period==="mar"?"March 2026":"Q1 2026 total"}/>
-                <Kpi label="Page Views"     value={gaS.pv>0?fmt(gaS.pv):"—"}             sub={period==="jan"?"January 2026":period==="feb"?"February 2026":period==="mar"?"March 2026":"Q1 2026 total"}/>
-              </div>
-              {period!=="ytd"&&(()=>{
-                const yoy={jan:{cur:[3192,3727,4689],prev:[1359,1706,2575]},feb:{cur:[2657,3137,4022],prev:[1224,1495,2383]},mar:{cur:[2160,2076,3538],prev:[2996,3631,5475]}}[period];
-                const mo=period==="jan"?"Jan":period==="feb"?"Feb":"Mar";
-                return yoy?(
-                  <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:8}}>
-                    <YoYCard label="Users"      cur={yoy.cur[0]} prev={yoy.prev[0]} curLabel={mo+" '26"} prevLabel={mo+" '25"}/>
-                    <YoYCard label="Sessions"   cur={yoy.cur[1]} prev={yoy.prev[1]} curLabel={mo+" '26"} prevLabel={mo+" '25"}/>
-                    <YoYCard label="Page Views" cur={yoy.cur[2]} prev={yoy.prev[2]} curLabel={mo+" '26"} prevLabel={mo+" '25"}/>
-                  </div>
-                ):null;
-              })()}
-              <Sec icon="📈" title="Daily Traffic" sub="Active users and sessions by day"/>
-              <div style={{background:C.bgCard,borderRadius:12,padding:"14px 8px 4px",border:`1px solid ${C.border}`}}>
-                <ResponsiveContainer width="100%" height={210}>
-                  <AreaChart data={period==="ytd"?gaDaily.filter((_,i)=>i%2===0):gaDaily}>
-                    <defs>
-                      <linearGradient id="gG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={C.green} stopOpacity={0.3}/><stop offset="100%" stopColor={C.green} stopOpacity={0}/></linearGradient>
-                      <linearGradient id="gP" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={C.periwinkle} stopOpacity={0.2}/><stop offset="100%" stopColor={C.periwinkle} stopOpacity={0}/></linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke={C.border} vertical={false}/>
-                    <XAxis dataKey="d" tick={{fontSize:8,fill:C.t3}} tickLine={false} axisLine={false} interval={period==="ytd"?5:3}/>
-                    <YAxis tick={{fontSize:9,fill:C.t3}} tickLine={false} axisLine={false}/>
-                    <Tooltip content={React.createElement(Tip)}/>
-                    <Area type="monotone" dataKey="u" name="Users"    stroke={C.green}      fill="url(#gG)" strokeWidth={2} dot={false}/>
-                    <Area type="monotone" dataKey="s" name="Sessions" stroke={C.periwinkle} fill="url(#gP)" strokeWidth={1.5} dot={false}/>
-                  </AreaChart>
-                </ResponsiveContainer>
-                <div style={{display:"flex",justifyContent:"center",gap:16,padding:"4px 0",fontSize:10,color:C.t3}}>
-                  <span style={{display:"flex",alignItems:"center",gap:4}}><span style={{width:6,height:6,background:C.green,borderRadius:2}}/>Users</span>
-                  <span style={{display:"flex",alignItems:"center",gap:4}}><span style={{width:6,height:6,background:C.periwinkle,borderRadius:2}}/>Sessions</span>
-                </div>
-              </div>
-              <Story title={pLabel+" — Key Takeaways"}>
-                {period==="jan"&&<p style={{margin:0}}>A <span style={{color:C.green,fontWeight:600}}>massive 3-day spike Jan 14–16</span> (513, 383, 243 daily users) driven by the AITX press release. Users more than doubled YoY (3,192 vs. 1,359).</p>}
-                {period==="feb"&&<p style={{margin:0}}>Late-month surge <span style={{color:C.green,fontWeight:600}}>(Feb 24–28: 150–236 daily users)</span> driven by the Railroads Friends merger blog — the site's #2 most visited page. Users more than doubled YoY (2,657 vs. 1,224).</p>}
-                {period==="mar"&&<p style={{margin:0}}>March opened strong with a <span style={{color:C.green,fontWeight:600}}>spike in the first week (Mar 1–6: 159–260 daily sessions)</span> tied to Employee Appreciation + Talk Track content. Users were down vs. March 2025 (2,160 vs. 2,996) — March 2025 was an outlier boosted by major partnership announcements.</p>}
-                {period==="ytd"&&<p style={{margin:0}}><span style={{color:C.green,fontWeight:600}}>7,009 users + 7,940 sessions in Q1 2026</span> vs. 5,579 users same period 2025 — up 26%. <span style={{color:C.green,fontWeight:600}}>LinkedIn remains the primary traffic driver</span> — every major content spike maps directly to a post.</p>}
-              </Story>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* ── PODCAST ── */}
-      {platform==="podcast"&&(
-        <div>
-          <div style={{textAlign:"center",marginBottom:16}}><span style={{fontSize:15,fontWeight:700}}>Don't Dwell On It + Talk Track · All Time</span></div>
-          <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:8}}>
-            <Kpi label="All-Time Downloads" value={fmt(POD_ALLTIME)}  sub="Since launch"/>
-            <Kpi label="Last 30 Days"       value={POD_LAST30}        sub="Downloads"/>
-            <Kpi label="Last 90 Days"       value={POD_LAST90}        sub="Downloads"/>
-            <Kpi label="Next Ep Forecast"   value={POD_PREDICTED}     sub="Buzzsprout prediction"/>
-          </div>
-          <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:8}}>
-            <Kpi label="Last 7 Days" value={POD_LAST7} sub="Downloads"/>
-            <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:12,padding:"14px 16px",flex:"3 1 300px"}}>
-              <div style={{fontSize:10,fontWeight:600,color:C.t3,textTransform:"uppercase",letterSpacing:0.8,marginBottom:6}}>Top Platform</div>
-              <div style={{fontSize:14,fontWeight:700,color:C.t1}}>Apple Podcasts <span style={{color:C.green}}>43%</span> · Spotify <span style={{color:C.green}}>22%</span></div>
-              <div style={{fontSize:10,color:C.t3,marginTop:4}}>Based on last 5 episodes</div>
-            </div>
-          </div>
-          <Sec icon="📈" title="Monthly Download Trend" sub="All-time · January 2025 to March 2026"/>
-          <div style={{background:C.bgCard,borderRadius:12,padding:"14px 8px 4px",border:`1px solid ${C.border}`}}>
-            <ResponsiveContainer width="100%" height={200}>
-              <AreaChart data={POD_TREND}>
-                <defs><linearGradient id="podG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={C.green} stopOpacity={0.35}/><stop offset="100%" stopColor={C.green} stopOpacity={0}/></linearGradient></defs>
-                <CartesianGrid strokeDasharray="3 3" stroke={C.border} vertical={false}/>
-                <XAxis dataKey="m" tick={{fontSize:8,fill:C.t3}} tickLine={false} axisLine={false} interval={1}/>
-                <YAxis tick={{fontSize:9,fill:C.t3}} tickLine={false} axisLine={false}/>
-                <Tooltip content={React.createElement(Tip)}/>
-                <Area type="monotone" dataKey="d" name="Downloads" stroke={C.green} fill="url(#podG)" strokeWidth={2} dot={{r:2.5,fill:C.green,strokeWidth:0}}/>
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-          <Sec icon="🏆" title="Top Episodes by Downloads"/>
-          <div style={{display:"flex",gap:6,marginBottom:14,flexWrap:"wrap"}}>
-            <PillBtn active={podSeries==="all"}       label="All Episodes"      onClick={()=>setPodSeries("all")}/>
-            <PillBtn active={podSeries==="ddot"}      label="Don't Dwell On It" onClick={()=>setPodSeries("ddot")}/>
-            <PillBtn active={podSeries==="talktrack"} label="Talk Track"        onClick={()=>setPodSeries("talktrack")}/>
-          </div>
-          {(podSeries==="all"||podSeries==="ddot")&&(
-            <div>
-              {podSeries==="all"&&<div style={{fontSize:11,fontWeight:700,color:C.periwinkle,marginBottom:8,letterSpacing:0.5}}>DON'T DWELL ON IT</div>}
-              <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:podSeries==="all"?18:0}}>
-                {DDOT_EPS.map((ep,i)=>(
-                  <div key={i} style={{background:C.bgCard,borderRadius:10,padding:"11px 14px",border:`1px solid ${i===0?C.green+"55":C.border}`,display:"flex",alignItems:"center",gap:10}}>
-                    <div style={{width:26,height:26,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,flexShrink:0,color:i===0?C.bgDark:C.t1,background:i===0?C.green:i===1?C.border:"transparent",border:i>1?`1px solid ${C.border}`:"none"}}>{i+1}</div>
-                    <div style={{flex:1,minWidth:0}}>
-                      <div style={{fontWeight:600,color:C.t1,fontSize:12,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{ep.title}</div>
-                      <div style={{marginTop:5,height:4,borderRadius:2,background:C.border,overflow:"hidden"}}><div style={{width:Math.round((ep.downloads/DDOT_EPS[0].downloads)*100)+"%",height:"100%",background:C.green,borderRadius:2,opacity:0.8}}/></div>
-                    </div>
-                    <div style={{textAlign:"right",flexShrink:0,marginLeft:8}}>
-                      <div style={{fontSize:17,fontWeight:800,color:C.green}}>{ep.downloads}</div>
-                      <div style={{fontSize:9,color:C.t3}}>{ep.date}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          {(podSeries==="all"||podSeries==="talktrack")&&(
-            <div>
-              {podSeries==="all"&&<div style={{fontSize:11,fontWeight:700,color:C.periwinkle,marginBottom:8,letterSpacing:0.5}}>TALK TRACK</div>}
-              <div style={{display:"flex",flexDirection:"column",gap:6}}>
-                {TT_EPS.map((ep,i)=>(
-                  <div key={i} style={{background:C.bgCard,borderRadius:10,padding:"11px 14px",border:`1px solid ${i===0?C.periwinkle+"55":C.border}`,display:"flex",alignItems:"center",gap:10}}>
-                    <div style={{width:26,height:26,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,flexShrink:0,color:i===0?C.bgDark:C.t1,background:i===0?C.periwinkle:i===1?C.border:"transparent",border:i>1?`1px solid ${C.border}`:"none"}}>{i+1}</div>
-                    <div style={{flex:1,minWidth:0}}>
-                      <div style={{fontWeight:600,color:C.t1,fontSize:12,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{ep.title}</div>
-                      <div style={{marginTop:5,height:4,borderRadius:2,background:C.border,overflow:"hidden"}}><div style={{width:Math.round((ep.downloads/TT_EPS[0].downloads)*100)+"%",height:"100%",background:C.periwinkle,borderRadius:2,opacity:0.8}}/></div>
-                    </div>
-                    <div style={{textAlign:"right",flexShrink:0,marginLeft:8}}>
-                      <div style={{fontSize:17,fontWeight:800,color:C.periwinkle}}>{ep.downloads}</div>
-                      <div style={{fontSize:9,color:C.t3}}>{ep.date}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          <Sec icon="📱" title="Platform Breakdown" sub="Last 5 episodes · Buzzsprout data"/>
-          <div style={{background:C.bgCard,borderRadius:12,padding:"16px",border:`1px solid ${C.border}`,display:"flex",flexDirection:"column",gap:10}}>
-            {POD_APPS.map((a,i)=>(
-              <div key={i} style={{display:"flex",alignItems:"center",gap:10}}>
-                <div style={{width:110,fontSize:11,color:C.t2,flexShrink:0}}>{a.app}</div>
-                <div style={{flex:1,height:8,borderRadius:4,background:C.border,overflow:"hidden"}}><div style={{width:a.pct+"%",height:"100%",background:a.color,borderRadius:4,opacity:0.85}}/></div>
-                <div style={{width:60,textAlign:"right",fontSize:11,fontWeight:700,color:C.t1,flexShrink:0}}>{a.pct}% <span style={{color:C.t3,fontWeight:400}}>({a.count})</span></div>
-              </div>
-            ))}
-          </div>
-          <div style={{background:`linear-gradient(135deg,${C.bgCard},${C.bgDeep})`,border:`1px solid ${C.periwinkle}33`,borderRadius:12,padding:"16px 18px",marginTop:18,display:"flex",alignItems:"center",gap:16}}>
-            <div style={{fontSize:32,fontWeight:800,color:C.periwinkle,lineHeight:1}}>{POD_PREDICTED}</div>
-            <div>
-              <div style={{fontSize:12,fontWeight:700,color:C.periwinkle,marginBottom:3}}>Buzzsprout Episode Predictor</div>
-              <div style={{fontSize:11,color:C.t2,lineHeight:1.6}}>Forecasted downloads for the next episode within its first 90 days. Consistent publishing + LinkedIn promotion can push this higher.</div>
-            </div>
-          </div>
-          <Story title="Podcast — Key Takeaways">
-            <p style={{margin:0}}><span style={{color:C.green,fontWeight:600}}>750 total downloads</span> — up 43 from last month. Last 7 days hit 34 downloads, the strongest recent week. Apple Podcasts grew to <span style={{color:C.green,fontWeight:600}}>43%</span> of the audience while Spotify sits at 22%. Podcast Addict joined the mix at 6%. The Buzzsprout predictor forecasts <span style={{color:C.periwinkle,fontWeight:600}}>{POD_PREDICTED} downloads</span> for the next episode.</p>
-          </Story>
-        </div>
-      )}
-
-      <div style={{textAlign:"center",marginTop:32,paddingTop:14,borderTop:`1px solid ${C.border}`}}>
-        <div style={{fontSize:9,color:C.t3}}>Telegraph · Marketing Dashboard · LinkedIn Organic + Google Analytics 4 + Buzzsprout</div>
-        <div style={{fontSize:9,color:C.t3,marginTop:2}}>Last updated {LAST_UPDATED}</div>
-      </div>
-    </div>
-  );
+function pLabel(){
+  if(period==="jan") return "January 2026";
+  if(period==="feb") return "February 2026";
+  if(period==="mar") return "March 2026";
+  if(period==="2025") return "2025 Full Year";
+  return "Q1 2026 YTD";
 }
 
-ReactDOM.render(React.createElement(Dashboard), document.getElementById("root"));
+function liStats(){
+  const active=getActive();
+  return {
+    posts:getPosts().length,
+    imp:sumK(active,"imp"),
+    eng:avgK(active,"eng").toFixed(1),
+    clicks:sumK(active,"clicks"),
+    likes:sumK(active,"likes"),
+    newFollowers:period==="jan"?98:period==="feb"?30:period==="mar"?15:143,
+    totalFollowers:period==="jan"?2335:period==="feb"?2365:period==="mar"?2393:2393,
+  };
+}
+
+function gaStats(){
+  if(period==="jan") return GA_26_MO[0];
+  if(period==="feb") return GA_26_MO[1];
+  if(period==="mar") return GA_26_MO[2];
+  if(period==="ytd") return {
+    users:GA_26_MO[0].users+GA_26_MO[1].users+GA_26_MO[2].users,
+    sessions:GA_26_MO[0].sessions+GA_26_MO[1].sessions+GA_26_MO[2].sessions,
+    pv:GA_26_MO[0].pv+GA_26_MO[1].pv+GA_26_MO[2].pv,
+  };
+  return {users:sumK(GA_25_MO,"users"),sessions:GA_2025_SESSIONS.reduce((a,b)=>a+b,0),pv:38838};
+}
+
+function kpi(label,value,sub){
+  return `<div class="kpi"><div class="kpi-label">${label}</div><div class="kpi-value">${value}</div>${sub?`<div class="kpi-sub">${sub}</div>`:""}</div>`;
+}
+
+function secHTML(icon,title,sub=""){
+  return `<div class="sec"><span style="font-size:15px">${icon}</span><div><h3>${title}</h3>${sub?`<div class="sec-sub">${sub}</div>`:""}</div></div>`;
+}
+
+function storyHTML(title,text){
+  return `<div class="story"><div class="story-title"><div class="story-bar"></div><h4 style="font-size:12px;font-weight:700;color:${C.green};margin:0">${title}</h4></div><div class="story-text">${text}</div></div>`;
+}
+
+function destroyChart(id){
+  if(charts[id]){charts[id].destroy();delete charts[id];}
+}
+
+function renderApp(){
+  document.getElementById("app").innerHTML = buildHTML();
+  attachListeners();
+  setTimeout(renderCharts, 50);
+}
+
+function buildHTML(){
+  let html = buildHeader() + buildTabs() + buildPills();
+  if(platform==="linkedin") html += buildLinkedin();
+  else if(platform==="website") html += buildWebsite();
+  else html += buildPodcast();
+  html += `<div style="text-align:center;margin-top:32px;padding-top:14px;border-top:1px solid ${C.border};font-size:9px;color:${C.t3}">
+    Telegraph · Marketing Dashboard · LinkedIn + GA4 + Buzzsprout<br>Last updated ${LAST_UPDATED}
+  </div>`;
+  return html;
+}
+
+function buildHeader(){
+  return `
+  <div style="text-align:center;margin-bottom:24px">
+    <div class="card" style="text-align:left;margin-bottom:0">
+      <div style="font-size:12px;font-weight:700;color:${C.t1};margin-bottom:8px">📋 About This Dashboard</div>
+      <p style="font-size:11px;color:${C.t2};margin:0 0 10px;line-height:1.7">This dashboard tracks Telegraph's organic marketing performance across LinkedIn, the company website, and our podcast network. Updated monthly — designed to give leadership a clear, data-driven view of content impact, audience growth, and website traffic.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+        ${[["LinkedIn","Post-level impressions, engagement, clicks, reactions + follower growth."],["Website","Google Analytics 4 traffic trends, YoY growth, and LinkedIn-to-web impact."],["Podcast","Buzzsprout data — episode downloads, platform breakdown, listener growth."]].map(([l,d])=>`
+          <div style="flex:1 1 160px;background:${C.bgDeep};border-radius:8px;padding:10px 12px;border:1px solid ${C.border}">
+            <div style="font-size:10px;font-weight:700;color:${C.green};margin-bottom:4px">${l}</div>
+            <div style="font-size:10px;color:${C.t3};line-height:1.6">${d}</div>
+          </div>`).join("")}
+      </div>
+      <div style="padding-top:10px;border-top:1px solid ${C.border};font-size:10px;color:${C.t3}">📡 Data: LinkedIn Organic · Google Analytics 4 · Buzzsprout</div>
+    </div>
+    <div style="display:inline-flex;align-items:center;gap:6px;margin:28px 0 12px">
+      <div style="width:8px;height:8px;border-radius:50%;background:${C.green};box-shadow:0 0 14px ${C.green}88"></div>
+      <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:3px;color:${C.green}">Telegraph Marketing</span>
+    </div>
+    <h1 style="font-size:48px;font-weight:800;color:#fff;margin:0 0 8px;letter-spacing:-2px;line-height:1.1">Marketing <span style="color:${C.green}">Dashboard</span></h1>
+    <p style="color:${C.t3};font-size:14px;margin:0 0 14px;letter-spacing:.5px">LinkedIn · Website · Podcast</p>
+    <div style="display:inline-flex;align-items:center;gap:5px;background:${C.bgCard};border:1px solid ${C.border};border-radius:20px;padding:6px 16px">
+      <span style="width:6px;height:6px;border-radius:50%;background:${C.yellow};display:inline-block"></span>
+      <span style="font-size:11px;color:${C.t3}">Last updated: <strong style="color:${C.t2}">${LAST_UPDATED}</strong></span>
+    </div>
+  </div>`;
+}
+
+function buildTabs(){
+  return `<div class="tab-row">
+    <button class="tab-btn ${platform==="linkedin"?"active":""}" data-tab="linkedin">LinkedIn</button>
+    <button class="tab-btn ${platform==="website"?"active":""}" data-tab="website">Website</button>
+    <button class="tab-btn ${platform==="podcast"?"active":""}" data-tab="podcast">🎙 Podcast</button>
+  </div>`;
+}
+
+function buildPills(){
+  if(platform==="podcast") return "";
+  const pills=[["ytd","Q1 2026 YTD"],["jan","January"],["feb","February"],["mar","March"],["2025","2025 Full Year"]];
+  return `<div class="pill-row">${pills.map(([v,l])=>`<button class="pill ${period===v?"active":""}" data-period="${v}">${l}</button>`).join("")}</div>`;
+}
+
+function buildLinkedin(){
+  const s=liStats();
+  const active=getActive();
+  const pl=pLabel();
+
+  if(period==="2025"){
+    const totalClicks=sumK(LI_2025,"clicks"), totalReactions=sumK(LI_2025,"reactions"), totalFollowers=sumK(LI_2025,"followers");
+    return `
+    <div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">${pl} · LinkedIn</span></div>
+    <div class="kpi-grid">
+      ${kpi("Total Posts","131","Full year 2025")}
+      ${kpi("Avg Engagement",avgK(LI_2025,"avgEng").toFixed(1)+"%","Avg across all posts")}
+      ${kpi("Total Clicks",fmt(totalClicks),"Across all posts")}
+      ${kpi("Followers Gained",totalFollowers,"+613 net organic")}
+    </div>
+    <div class="kpi-grid">
+      ${kpi("Total Reactions",fmt(totalReactions),"Across all posts")}
+      ${kpi("Start Followers","1,665","December 2024")}
+      ${kpi("End Followers","2,278","+37% growth")}
+    </div>
+    ${secHTML("📊","Monthly Posts + Avg Engagement","2025 full year")}
+    <div class="card"><canvas id="chart2025LI"></canvas></div>
+    ${storyHTML("2025 Year in Review","Followers grew <strong style='color:"+C.green+"'>from 1,665 to 2,278 (+37%)</strong>. March surged +187 followers. October peaked with the Chicago Marathon post at 6,579 impressions. Cadence scaled from ~6 to 17 posts/month.")}`;
+  }
+
+  // Content type analysis
+  const counts={};
+  const engByType={};
+  active.forEach(p=>{
+    counts[p.type]=(counts[p.type]||0)+1;
+    if(!engByType[p.type]) engByType[p.type]={total:0,count:0};
+    engByType[p.type].total+=p.eng; engByType[p.type].count+=1;
+  });
+  const typeData=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const total=typeData.reduce((s,[,v])=>s+v,0);
+
+  const top10=[...active].sort((a,b)=>b.eng-a.eng).slice(0,10);
+
+  const contentMixRows=typeData.map(([name,count],i)=>{
+    const e=engByType[name];
+    const ae=e?(e.total/e.count).toFixed(1):"—";
+    const pct=Math.round((count/total)*100);
+    const col=TYPE_COLORS[name]||C.blue;
+    return `<div style="margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+        <div style="width:10px;height:10px;border-radius:2px;background:${col};flex-shrink:0"></div>
+        <div style="font-size:11px;font-weight:600;color:${C.t1};flex:1">${name}</div>
+        <div style="font-size:11px;font-weight:700;color:${C.t1}">${count} posts</div>
+      </div>
+      <div style="padding-left:18px;display:flex;gap:10px;align-items:center">
+        <div style="height:4px;border-radius:2px;background:${C.border};flex:1;overflow:hidden">
+          <div style="width:${pct}%;height:100%;background:${col};border-radius:2px;opacity:.7"></div>
+        </div>
+        <div style="font-size:10px;color:${C.t3};flex-shrink:0;width:100px;text-align:right">avg ${ae}% eng · ${pct}%</div>
+      </div>
+    </div>`;
+  }).join("");
+
+  const top10Rows=top10.map((p,i)=>{
+    const col=TYPE_COLORS[p.type]||C.blue;
+    const barW=Math.min((p.eng/80)*100,100);
+    let numBg=i===0?C.green:i===1?C.border:"transparent";
+    let numColor=i===0?"#10173D":C.t1;
+    let numBorder=i>1?`1px solid ${C.border}`:"none";
+    return `<div class="post-row">
+      <div style="width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;color:${numColor};background:${numBg};border:${numBorder}">${i+1}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;color:${C.t1};font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.title}</div>
+        <div style="display:flex;gap:6px;align-items:center;margin-top:3px;flex-wrap:wrap">
+          <span class="type-tag" style="background:${col}22;color:${col}">${p.type}</span>
+          <span style="font-size:9px;color:${C.t3}">${p.date}</span>
+          <span style="font-size:9px;color:${C.t3}">${fmt(p.imp)} imp</span>
+          <span style="font-size:9px;color:${C.t3}">${fmt(p.clicks)} clicks</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${barW}%;background:${i===0?C.green:C.periwinkle}"></div></div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;margin-left:8px">
+        <div style="font-size:16px;font-weight:800;color:${i===0?C.green:C.t1}">${p.eng.toFixed(1)}%</div>
+        <div style="font-size:9px;color:${C.t3}">eng</div>
+      </div>
+    </div>`;
+  }).join("");
+
+  const stories={
+    jan:`January was headlined by <strong style="color:${C.green}">AITX Partnership</strong> (1,240 imp, 47 reactions) + <strong style="color:${C.green}">Charlie at MARS</strong> (1,482 imp, 17.6% eng). Market Consist PDF hit 34% engagement with 110 clicks. Closed with +98 new followers, the strongest single month in Telegraph history at that time.`,
+    feb:`<strong style="color:${C.green}">Day in the Life: Caleb dominated</strong> with 77.8% engagement + 614 clicks. Valentine's content averaged 37% combined. The Railroads Friends blog sparked a late-month website surge that became the #2 most visited page. 18 posts = 3.6x February 2025 cadence.`,
+    mar:`March was defined by <strong style="color:${C.green}">people-first content dominating</strong> — Employee Appreciation (70.4% eng, 647 clicks) + Team Childhood Photos (72.4% eng, 604 clicks). National Cocktail Day hit 63.3%. 4 of the top 5 posts were team photos or spotlights.`,
+    ytd:`<strong style="color:${C.green}">49 posts in Q1 2026</strong> vs. 23 same period in 2025 — more than doubled. All three months cleared the 6% engagement goal. The content formula: <strong style="color:${C.green}">team photos + interactive formats + industry analysis</strong>. +143 followers in Q1.`,
+  };
+
+  return `
+  <div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">${pl} · LinkedIn</span></div>
+  <div class="kpi-grid">
+    ${kpi("Total Posts",s.posts,period==="ytd"?"Q1 2026":period==="jan"?"January":period==="feb"?"February":"March")}
+    ${kpi("Total Impressions",fmt(s.imp),Math.round(s.imp/s.posts).toLocaleString()+" avg per post")}
+    ${kpi("Avg Engagement",s.eng+"%",period==="mar"?"vs 17.6% Mar '25":period==="feb"?"vs 14.6% Feb '25":period==="jan"?"vs 27.2% Jan '25":"Q1 2026")}
+    ${kpi("Total Clicks",fmt(s.clicks),Math.round(s.clicks/s.posts)+" avg per post")}
+  </div>
+  <div class="kpi-grid">
+    ${kpi("Total Reactions",fmt(s.likes),(s.likes/s.posts).toFixed(1)+" avg per post")}
+    ${kpi("New Followers",s.newFollowers,"Organic this period")}
+    ${kpi("Total Followers",fmt(s.totalFollowers),"End of period")}
+  </div>
+  ${secHTML("📊","Post Performance","Impressions per post with engagement rate overlay")}
+  <div class="card"><canvas id="chartLI"></canvas></div>
+  ${secHTML("🥧","Content Breakdown + Top Posts","Format mix and avg engagement · Top 10 posts by engagement rate")}
+  <div class="side-by-side">
+    <div class="half-card">
+      <div style="font-size:11px;font-weight:700;color:${C.t1};margin-bottom:12px">Content Mix</div>
+      <div style="height:160px;margin-bottom:12px"><canvas id="chartPie"></canvas></div>
+      ${contentMixRows}
+    </div>
+    <div class="half-card">
+      <div style="font-size:11px;font-weight:700;color:${C.t1};margin-bottom:12px">Top 10 by Engagement</div>
+      ${top10Rows}
+    </div>
+  </div>
+  ${storyHTML(pl+" — Key Takeaways", stories[period]||stories.ytd)}`;
+}
+
+function buildWebsite(){
+  const g=gaStats();
+  const pl=pLabel();
+
+  if(period==="2025"){
+    return `
+    <div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">${pl} · Website</span></div>
+    <div class="kpi-grid">
+      ${kpi("Total Users","22,008","Full year 2025")}
+      ${kpi("Total Sessions","26,591","Full year 2025")}
+      ${kpi("Page Views","38,838","Full year 2025")}
+    </div>
+    ${secHTML("📈","Monthly Sessions","2025 full year")}
+    <div class="card"><canvas id="chart2025GA"></canvas></div>
+    ${storyHTML("2025 Website Year in Review","Telegraph.io attracted <strong style='color:"+C.green+"'>22K+ users and 26.6K sessions</strong>. March peaked at 3,631 sessions. Oct–Dec averaged 2,485 sessions/month vs. 1,676 in Q1.")}`;
+  }
+
+  const yoyMap={
+    jan:{cur:[3192,3727,4689],prev:[1359,1706,2575],label:"Jan"},
+    feb:{cur:[2657,3137,4022],prev:[1224,1495,2383],label:"Feb"},
+    mar:{cur:[2160,2076,3538],prev:[2996,3631,5475],label:"Mar"},
+  };
+  const yoy=yoyMap[period];
+
+  const yoyCards=yoy?["Users","Sessions","Page Views"].map((l,i)=>{
+    const cur=yoy.cur[i], prev=yoy.prev[i];
+    const chg=(((cur-prev)/prev)*100).toFixed(0), up=chg>0;
+    return `<div style="background:${C.bgCard};border:1px solid ${C.border};border-radius:10px;padding:12px 14px;flex:1;min-width:100px">
+      <div style="font-size:9px;color:${C.t3};font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.6px">${l} YoY</div>
+      <div style="font-size:18px;font-weight:800;color:${up?C.green:C.red}">${up?"+":""}${chg}%</div>
+      <div style="font-size:9px;color:${C.t2};margin-top:2px">${fmt(cur)} vs ${fmt(prev)}</div>
+      <div style="font-size:9px;color:${C.t3}">${yoy.label} '26 vs ${yoy.label} '25</div>
+    </div>`;
+  }).join("") : "";
+
+  const stories={
+    jan:`A <strong style="color:${C.green}">massive 3-day spike Jan 14–16</strong> (513, 383, 243 daily users) driven by the AITX press release. Users more than doubled YoY (3,192 vs. 1,359).`,
+    feb:`Late-month surge <strong style="color:${C.green}">(Feb 24–28: 150–236 daily users)</strong> driven by the Railroads Friends merger blog — the site's #2 most visited page. Users more than doubled YoY (2,657 vs. 1,224).`,
+    mar:`March opened strong with a <strong style="color:${C.green}">spike in the first week (Mar 1–6: 159–260 daily sessions)</strong> tied to Employee Appreciation + Talk Track content. Users were down vs. March 2025 — March 2025 was an outlier boosted by major partnership announcements.`,
+    ytd:`<strong style="color:${C.green}">7,009 users + 7,940 sessions in Q1 2026</strong> vs. 5,579 users same period 2025 — up 26%. <strong style="color:${C.green}">LinkedIn remains the primary traffic driver</strong> — every major content spike maps directly to a post.`,
+  };
+
+  return `
+  <div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">${pl} · Website</span></div>
+  <div class="kpi-grid">
+    ${kpi("Active Users",fmt(g.users),period==="ytd"?"Q1 2026 total":pl)}
+    ${kpi("Sessions",fmt(g.sessions),period==="ytd"?"Q1 2026 total":pl)}
+    ${kpi("Page Views",fmt(g.pv),period==="ytd"?"Q1 2026 total":pl)}
+  </div>
+  ${yoy?`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">${yoyCards}</div>`:""}
+  ${secHTML("📈","Daily Traffic","Active users and sessions by day")}
+  <div class="card"><canvas id="chartGA"></canvas></div>
+  ${storyHTML(pl+" — Key Takeaways", stories[period]||stories.ytd)}`;
+}
+
+function buildPodcast(){
+  const epRows=(eps,color)=>eps.map((ep,i)=>{
+    const barW=Math.round((ep.dl/eps[0].dl)*100);
+    let numBg=i===0?color:i===1?C.border:"transparent";
+    let numCol=i===0?"#10173D":C.t1;
+    let numBorder=i>1?`1px solid ${C.border}`:"none";
+    return `<div class="ep-row" style="border-color:${i===0?color+"55":C.border}">
+      <div class="ep-num" style="color:${numCol};background:${numBg};border:${numBorder}">${i+1}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;color:${C.t1};font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${ep.title}</div>
+        <div class="progress-bar" style="margin-top:5px"><div class="progress-fill" style="width:${barW}%;background:${color};opacity:.8"></div></div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;margin-left:8px">
+        <div style="font-size:17px;font-weight:800;color:${color}">${ep.dl}</div>
+        <div style="font-size:9px;color:${C.t3}">${ep.date}</div>
+      </div>
+    </div>`;
+  }).join("");
+
+  const apps=[
+    {app:"Apple Podcasts",pct:43,count:38,color:"#FC3C44"},
+    {app:"Spotify",pct:22,count:20,color:"#1DB954"},
+    {app:"Web Browser",pct:6,count:5,color:C.blue},
+    {app:"Pocket Casts",pct:6,count:5,color:"#F43E37"},
+    {app:"Podcast Addict",pct:6,count:5,color:"#f59e0b"},
+    {app:"Other",pct:17,count:15,color:C.t3},
+  ];
+
+  return `
+  <div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">Don't Dwell On It + Talk Track · All Time</span></div>
+  <div class="kpi-grid">
+    ${kpi("All-Time Downloads","750","Since launch")}
+    ${kpi("Last 30 Days","65","Downloads")}
+    ${kpi("Last 90 Days","251","Downloads")}
+    ${kpi("Next Ep Forecast","29","Buzzsprout prediction")}
+  </div>
+  <div class="kpi-grid">
+    ${kpi("Last 7 Days","34","Downloads")}
+    <div class="card" style="flex:3 1 300px">
+      <div style="font-size:10px;font-weight:600;color:${C.t3};text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Top Platform</div>
+      <div style="font-size:14px;font-weight:700;color:${C.t1}">Apple Podcasts <span style="color:${C.green}">43%</span> · Spotify <span style="color:${C.green}">22%</span></div>
+      <div style="font-size:10px;color:${C.t3};margin-top:4px">Based on last 5 episodes</div>
+    </div>
+  </div>
+  ${secHTML("📈","Monthly Download Trend","Jan 2025 to Mar 2026")}
+  <div class="card"><canvas id="chartPod"></canvas></div>
+  ${secHTML("🏆","Top Episodes by Downloads")}
+  <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+    <button class="pill ${podSeries==="all"?"active":""}" data-pod="all">All Episodes</button>
+    <button class="pill ${podSeries==="ddot"?"active":""}" data-pod="ddot">Don't Dwell On It</button>
+    <button class="pill ${podSeries==="talktrack"?"active":""}" data-pod="talktrack">Talk Track</button>
+  </div>
+  ${(podSeries==="all"||podSeries==="ddot")?`
+    ${podSeries==="all"?`<div style="font-size:11px;font-weight:700;color:${C.periwinkle};margin-bottom:8px;letter-spacing:.5px">DON'T DWELL ON IT</div>`:""}
+    <div style="margin-bottom:${podSeries==="all"?18:0}px">${epRows(DDOT_EPS,C.green)}</div>`:""}
+  ${(podSeries==="all"||podSeries==="talktrack")?`
+    ${podSeries==="all"?`<div style="font-size:11px;font-weight:700;color:${C.periwinkle};margin-bottom:8px;letter-spacing:.5px">TALK TRACK</div>`:""}
+    ${epRows(TT_EPS,C.periwinkle)}`:""}
+  ${secHTML("📱","Platform Breakdown","Last 5 episodes · Buzzsprout data")}
+  <div class="card" style="display:flex;flex-direction:column;gap:10px">
+    ${apps.map(a=>`<div style="display:flex;align-items:center;gap:10px">
+      <div style="width:110px;font-size:11px;color:${C.t2};flex-shrink:0">${a.app}</div>
+      <div style="flex:1;height:8px;border-radius:4px;background:${C.border};overflow:hidden">
+        <div style="width:${a.pct}%;height:100%;background:${a.color};border-radius:4px;opacity:.85"></div>
+      </div>
+      <div style="width:60px;text-align:right;font-size:11px;font-weight:700;color:${C.t1};flex-shrink:0">${a.pct}% <span style="color:${C.t3};font-weight:400">(${a.count})</span></div>
+    </div>`).join("")}
+  </div>
+  <div style="background:linear-gradient(135deg,${C.bgCard},${C.bgDeep});border:1px solid ${C.periwinkle}33;border-radius:12px;padding:16px 18px;margin-top:18px;display:flex;align-items:center;gap:16px">
+    <div style="font-size:32px;font-weight:800;color:${C.periwinkle};line-height:1">29</div>
+    <div>
+      <div style="font-size:12px;font-weight:700;color:${C.periwinkle};margin-bottom:3px">Buzzsprout Episode Predictor</div>
+      <div style="font-size:11px;color:${C.t2};line-height:1.6">Forecasted downloads for the next episode within its first 90 days. Consistent publishing + LinkedIn promotion can push this higher.</div>
+    </div>
+  </div>
+  ${storyHTML("Podcast — Key Takeaways","<strong style='color:"+C.green+"'>750 total downloads</strong> since launch. Apple Podcasts grew to <strong style='color:"+C.green+"'>43%</strong> of the audience. Last 7 days hit 34 downloads — the strongest recent week. Buzzsprout forecasts 29 downloads for the next episode.")}`;
+}
+
+function renderCharts(){
+  Object.values(charts).forEach(c=>c.destroy());
+  charts={};
+  const isDark=true;
+  const grid="rgba(42,51,98,0.8)";
+  const tick={color:C.t3,font:{size:9,family:"Poppins"}};
+  const baseOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:C.bgCard,titleColor:C.green,bodyColor:C.t2,borderColor:C.border,borderWidth:1}}};
+
+  if(platform==="linkedin"){
+    const active=getActive();
+    if(period==="2025"){
+      const el=document.getElementById("chart2025LI");
+      if(el){
+        charts.li2025=new Chart(el,{type:"bar",data:{labels:LI_2025.map(m=>m.m),datasets:[{label:"Posts",data:LI_2025.map(m=>m.posts),backgroundColor:C.green+"cc",borderRadius:3,yAxisID:"y"},{label:"Avg Eng %",data:LI_2025.map(m=>m.avgEng),type:"line",borderColor:C.periwinkle,backgroundColor:"transparent",borderWidth:2,pointRadius:2,yAxisID:"y1"}]},options:{...baseOpts,scales:{x:{ticks:tick,grid:{color:grid}},y:{ticks:tick,grid:{color:grid}},y1:{position:"right",ticks:{...tick,color:C.periwinkle},grid:{display:false}}}}});
+      }
+    } else {
+      const elLI=document.getElementById("chartLI");
+      if(elLI){
+        const labels=active.map(p=>p.date.replace(/Jan |Feb |Mar /,""));
+        charts.li=new Chart(elLI,{type:"bar",data:{labels,datasets:[{label:"Impressions",data:active.map(p=>p.imp),backgroundColor:C.green+"cc",borderRadius:3,yAxisID:"y"},{label:"Eng %",data:active.map(p=>p.eng),type:"line",borderColor:C.periwinkle,backgroundColor:"transparent",borderWidth:2,pointRadius:2,yAxisID:"y1"}]},options:{...baseOpts,scales:{x:{ticks:{...tick,maxRotation:45,autoSkip:true,maxTicksLimit:period==="ytd"?15:18},grid:{color:grid}},y:{ticks:tick,grid:{color:grid}},y1:{position:"right",ticks:{...tick,color:C.periwinkle},grid:{display:false}}}}});
+      }
+      const elPie=document.getElementById("chartPie");
+      if(elPie){
+        const counts={};
+        active.forEach(p=>{counts[p.type]=(counts[p.type]||0)+1;});
+        const entries=Object.entries(counts);
+        charts.pie=new Chart(elPie,{type:"doughnut",data:{labels:entries.map(([n])=>n),datasets:[{data:entries.map(([,v])=>v),backgroundColor:entries.map(([n])=>TYPE_COLORS[n]||C.blue),borderWidth:2,borderColor:C.bgCard}]},options:{...baseOpts,cutout:"55%",plugins:{legend:{display:false},tooltip:{backgroundColor:C.bgCard,titleColor:C.green,bodyColor:C.t2,borderColor:C.border,borderWidth:1}}}});
+      }
+    }
+  }
+
+  if(platform==="website"){
+    if(period==="2025"){
+      const el=document.getElementById("chart2025GA");
+      if(el){
+        charts.ga2025=new Chart(el,{type:"bar",data:{labels:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],datasets:[{label:"Sessions",data:GA_2025_SESSIONS,backgroundColor:C.green+"cc",borderRadius:3}]},options:{...baseOpts,scales:{x:{ticks:tick,grid:{color:grid}},y:{ticks:tick,grid:{color:grid}}}}});
+      }
+    } else {
+      const el=document.getElementById("chartGA");
+      if(el){
+        let data=period==="jan"?GA_JAN:period==="feb"?GA_FEB:period==="mar"?GA_MAR:[...GA_JAN,...GA_FEB,...GA_MAR];
+        let labels=data.map((_,i)=>i+1+"");
+        if(period==="ytd"){
+          const step=Math.ceil(data.length/40);
+          data=data.filter((_,i)=>i%step===0);
+          labels=data.map((_,i)=>i*step+1+"");
+        }
+        charts.ga=new Chart(el,{type:"line",data:{labels,datasets:[{label:"Sessions",data,borderColor:C.green,backgroundColor:C.green+"22",borderWidth:2,pointRadius:0,fill:true,tension:.3}]},options:{...baseOpts,scales:{x:{ticks:{...tick,maxTicksLimit:12},grid:{color:grid}},y:{ticks:tick,grid:{color:grid},beginAtZero:true}}}});
+      }
+    }
+  }
+
+  if(platform==="podcast"){
+    const el=document.getElementById("chartPod");
+    if(el){
+      charts.pod=new Chart(el,{type:"line",data:{labels:POD_TREND_LABELS,datasets:[{label:"Downloads",data:POD_TREND,borderColor:C.green,backgroundColor:C.green+"22",borderWidth:2,pointRadius:3,fill:true,tension:.3}]},options:{...baseOpts,scales:{x:{ticks:{...tick,maxRotation:45,autoSkip:false},grid:{color:grid}},y:{ticks:tick,grid:{color:grid},beginAtZero:true}}}});
+    }
+  }
+}
+
+function attachListeners(){
+  document.querySelectorAll("[data-tab]").forEach(btn=>{
+    btn.addEventListener("click",()=>{platform=btn.dataset.tab;renderApp();});
+  });
+  document.querySelectorAll("[data-period]").forEach(btn=>{
+    btn.addEventListener("click",()=>{period=btn.dataset.period;renderApp();});
+  });
+  document.querySelectorAll("[data-pod]").forEach(btn=>{
+    btn.addEventListener("click",()=>{podSeries=btn.dataset.pod;renderApp();});
+  });
+}
+
+renderApp();
 </script>
 </body>
 </html>
