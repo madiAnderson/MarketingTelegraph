@@ -439,7 +439,98 @@ function buildWebsite(){
   ${yoy?`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">${yoyCards}</div>`:""}
   ${secHTML("📈","Daily Traffic","Active users and sessions by day")}
   <div class="card"><canvas id="chartGA"></canvas></div>
+  ${period!=="2025" ? buildAudienceInsights() : ""}
   ${storyHTML(pl+" — Key Takeaways", stories[period]||stories.ytd)}`;
+}
+
+function buildAudienceInsights(){
+  return `
+  ${secHTML("🌎","Audience Insights","Q1 2026 · Bot-adjusted · Source: Google Analytics 4")}
+  <div class="kpi-grid" style="margin-bottom:8px">
+    ${kpi("Total Sessions (adj.)","9,561","+39% vs Q1 2025")}
+    ${kpi("Countries Reached","90+","Q1 2026")}
+    ${kpi("US Share","55%","5,470 sessions")}
+    ${kpi("N. America Total","67%","US + Mexico + Canada")}
+    ${kpi("Desktop Share","68%","of all sessions")}
+  </div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+    <div class="half-card">
+      <div style="font-size:11px;font-weight:700;color:${C.t1};margin-bottom:12px">Top Countries <span style="font-size:9px;font-weight:400;color:${C.t3}">(bot-adjusted)</span></div>
+      ${[["🇺🇸 United States",5306,100],["🇲🇽 Mexico",631,12],["🇨🇦 Canada",514,10],["🇮🇳 India",200,4],["🇩🇪 Germany",109,2],["🇬🇧 United Kingdom",63,1.5]].map(([label,val,pct])=>`
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+          <div style="font-size:11px;color:${C.t2};min-width:130px;flex-shrink:0">${label}</div>
+          <div style="flex:1;height:6px;border-radius:3px;background:${C.border};overflow:hidden">
+            <div style="width:${pct}%;height:100%;background:${C.blue};border-radius:3px;opacity:.85"></div>
+          </div>
+          <div style="font-size:11px;font-weight:700;color:${C.t1};min-width:40px;text-align:right">${val.toLocaleString()}</div>
+        </div>`).join("")}
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid ${C.border};font-size:10px;color:${C.yellow}">⚠ China (1,649) + Singapore (397) excluded — bot signals</div>
+    </div>
+    <div class="half-card">
+      <div style="font-size:11px;font-weight:700;color:${C.t1};margin-bottom:12px">Top US States <span style="font-size:9px;font-weight:400;color:${C.t3}">(bot-adjusted)</span></div>
+      ${[["California",879,100],["Illinois",500,57],["New York",358,41],["Texas",304,35],["Florida",257,29],["Colorado",224,25],["Massachusetts",147,17]].map(([label,val,pct])=>`
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+          <div style="font-size:11px;color:${C.t2};min-width:110px;flex-shrink:0">${label}</div>
+          <div style="flex:1;height:6px;border-radius:3px;background:${C.border};overflow:hidden">
+            <div style="width:${pct}%;height:100%;background:${C.green};border-radius:3px;opacity:.85"></div>
+          </div>
+          <div style="font-size:11px;font-weight:700;color:${C.t1};min-width:35px;text-align:right">${val}</div>
+        </div>`).join("")}
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid ${C.border};font-size:10px;color:${C.yellow}">⚠ Virginia (1,110 raw) excluded — bot traffic</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+    <div style="flex:1 1 160px;background:${C.bgCard};border:1px solid ${C.border};border-radius:12px;padding:16px">
+      <div style="font-size:11px;font-weight:700;color:${C.t1};margin-bottom:12px">Device Breakdown</div>
+      ${[["Desktop","68%","72s avg","#378ADD"],["Mobile","29%","54s avg","#1D9E75"],["Tablet","3%","116s avg","#7F77DD"]].map(([d,pct,dur,col])=>`
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <div style="width:10px;height:10px;border-radius:2px;background:${col};flex-shrink:0"></div>
+          <div style="flex:1;font-size:11px;color:${C.t2}">${d}</div>
+          <div style="font-size:11px;font-weight:700;color:${C.t1}">${pct}</div>
+          <div style="font-size:10px;color:${C.t3}">${dur}</div>
+        </div>
+        <div style="height:4px;border-radius:2px;background:${C.border};overflow:hidden;margin-bottom:8px">
+          <div style="width:${pct};height:100%;background:${col};border-radius:2px;opacity:.8"></div>
+        </div>`).join("")}
+    </div>
+    <div style="flex:1 1 160px;background:${C.bgCard};border:1px solid ${C.border};border-radius:12px;padding:16px">
+      <div style="font-size:11px;font-weight:700;color:${C.t1};margin-bottom:12px">Traffic Channels</div>
+      ${[["Direct","71%","47s avg","#378ADD"],["Organic Search","14%","117s avg","#1D9E75"],["Organic Social","4%","227s avg","#D4537E"],["Referral","4%","150s avg","#EF9F27"],["Email","3%","155s avg","#C084FC"]].map(([d,pct,dur,col])=>`
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <div style="width:10px;height:10px;border-radius:2px;background:${col};flex-shrink:0"></div>
+          <div style="flex:1;font-size:11px;color:${C.t2}">${d}</div>
+          <div style="font-size:11px;font-weight:700;color:${C.t1}">${pct}</div>
+          <div style="font-size:10px;color:${C.t3}">${dur}</div>
+        </div>`).join("")}
+    </div>
+    <div style="flex:1 1 160px;background:${C.bgCard};border:1px solid ${C.border};border-radius:12px;padding:16px">
+      <div style="font-size:11px;font-weight:700;color:${C.t1};margin-bottom:12px">Operating System</div>
+      ${[["Windows","41%","#378ADD"],["Android","22%","#1D9E75"],["Mac","16%","#7F77DD"],["iOS","9%","#EF9F27"],["Linux (bots)","12%","#5C6370"]].map(([d,pct,col])=>`
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <div style="width:10px;height:10px;border-radius:2px;background:${col};flex-shrink:0"></div>
+          <div style="flex:1;font-size:11px;color:${C.t2}">${d}</div>
+          <div style="font-size:11px;font-weight:700;color:${C.t1}">${pct}</div>
+        </div>`).join("")}
+    </div>
+  </div>
+  <div style="background:${C.bgCard};border:1px solid ${C.border};border-radius:12px;padding:16px;margin-bottom:8px">
+    <div style="font-size:11px;font-weight:700;color:${C.t1};margin-bottom:12px">Channel Quality — Engagement Rate vs. Avg Session Duration</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      ${[
+        ["Organic Social","227s avg session","50% bounce rate","✓ Best quality",C.green,C.greenDim],
+        ["Referral","150s avg session","47% bounce rate","✓ High intent",C.green,C.greenDim],
+        ["Organic Search","117s avg session","48% bounce rate","✓ Strong SEO signal",C.green,C.greenDim],
+        ["Email","155s avg session","67% bounce rate","ℹ Small but engaged",C.periwinkle,C.periwinkleDim],
+        ["Direct","47s avg session","84% bounce rate","⚠ Includes bot traffic",C.yellow,"rgba(255,209,102,0.12)"],
+      ].map(([ch,dur,br,tag,col,bg])=>`
+        <div style="flex:1 1 120px;background:${bg};border:1px solid ${col}33;border-radius:8px;padding:10px 12px">
+          <div style="font-size:11px;font-weight:600;color:${C.t1};margin-bottom:4px">${ch}</div>
+          <div style="font-size:10px;color:${C.t3};margin-bottom:2px">${dur}</div>
+          <div style="font-size:10px;color:${C.t3};margin-bottom:6px">${br}</div>
+          <span style="font-size:10px;font-weight:600;color:${col}">${tag}</span>
+        </div>`).join("")}
+    </div>
+  </div>`;
 }
 
 function buildPodcast(){
