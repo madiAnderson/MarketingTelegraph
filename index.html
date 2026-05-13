@@ -25,38 +25,33 @@ body{background:#10173D;font-family:'Poppins',sans-serif;color:#F0F2F5;min-heigh
 .sec h3{font-size:13px;font-weight:700;color:#F0F2F5;margin:0}
 .sec-sub{font-size:10px;color:#5C6370;margin-top:1px}
 .story{background:linear-gradient(135deg,#182048 0%,#0D1535 100%);border:1px solid rgba(52,255,164,.2);border-radius:12px;padding:16px 18px;margin-top:22px}
-.story-title{display:flex;align-items:center;gap:6px;margin-bottom:10px}
 .story-bar{width:3px;height:14px;border-radius:2px;background:#34FFA4;flex-shrink:0}
 .story-text{font-size:12px;line-height:1.8;color:#9BA3B0}
 .ep-row{background:#182048;border-radius:10px;padding:11px 14px;border:1px solid #2A3362;display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.ep-num{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
 .side-by-side{display:flex;gap:12px;flex-wrap:wrap;align-items:stretch}
 .half-card{flex:1 1 280px;background:#182048;border:1px solid #2A3362;border-radius:12px;padding:16px;display:flex;flex-direction:column}
-.post-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
-.type-tag{font-size:9px;padding:1px 6px;border-radius:8px;font-weight:600}
 .progress-bar{height:4px;border-radius:2px;background:#2A3362;overflow:hidden;margin-top:5px}
 .progress-fill{height:100%;border-radius:2px}
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:#10173D}
 ::-webkit-scrollbar-thumb{background:#2A3362;border-radius:3px}
 button:focus{outline:none}
-canvas{max-height:220px}
 </style>
 </head>
 <body>
-
 <div id="app"></div>
-
 <script>
-const LAST_UPDATED = "April 1, 2026";
+const LAST_UPDATED = "May 13, 2026";
 const C = {
-  green:"#34FFA4", greenDim:"rgba(52,255,164,0.12)",
-  periwinkle:"#C2D8FF", blue:"#6C9CFC", yellow:"#FFD166",
-  red:"#EF6461", border:"#2A3362", bgCard:"#182048", bgDeep:"#0D1535",
+  green:"#34FFA4", greenDim:"rgba(52,255,164,0.12)", greenMuted:"rgba(52,255,164,0.5)",
+  periwinkle:"#C2D8FF", periwinkleDim:"rgba(194,216,255,0.12)",
+  blue:"#6C9CFC", yellow:"#FFD166", red:"#EF6461",
+  border:"#2A3362", bgCard:"#182048", bgDeep:"#0D1535",
   t1:"#F0F2F5", t2:"#9BA3B0", t3:"#5C6370"
 };
-const TYPE_COLORS = {Picture:C.green, Video:C.periwinkle, Graphic:C.blue, Link:C.yellow, Poll:"#C084FC"};
+const TYPE_COLORS = {Picture:C.green,Video:C.periwinkle,Graphic:C.blue,Link:C.yellow,Poll:"#C084FC"};
 
+// ── LINKEDIN DATA ──
 const LI_JAN=[
   {date:"Jan 7",title:"DDOT S2 Teaser",type:"Graphic",imp:301,eng:5.98,likes:8,clicks:9},
   {date:"Jan 8",title:"DDOT S2 Ep 1 Launch",type:"Link",imp:774,eng:3.36,likes:9,clicks:16},
@@ -110,6 +105,31 @@ const LI_MAR=[
   {date:"Mar 27",title:"Talk Track Clip — Shippers",type:"Video",imp:251,eng:10.78,likes:9,clicks:18},
   {date:"Mar 28",title:"Talk Track Clip — Oil & Crops",type:"Video",imp:120,eng:14.17,likes:7,clicks:10},
   {date:"Mar 29",title:"Talk Track Clip — Middle East",type:"Video",imp:107,eng:10.28,likes:4,clicks:7},
+  {date:"Mar 30",title:"DDOT Teaser — Tech Adoption",type:"Graphic",imp:231,eng:9.09,likes:5,clicks:16},
+  {date:"Mar 31",title:"DDOT — The Fast + the Cautious",type:"Link",imp:300,eng:5.00,likes:8,clicks:7},
+];
+const LI_APR=[
+  {date:"Apr 1", title:"Dude Where's My Freight Car",type:"Graphic",imp:375,eng:9.36,likes:17,clicks:17},
+  {date:"Apr 2", title:"David IASIP Meme — Corn",type:"Graphic",imp:521,eng:8.25,likes:19,clicks:21},
+  {date:"Apr 3", title:"DDOT Fast & Curious — Safety Clip",type:"Video",imp:266,eng:4.14,likes:2,clicks:9},
+  {date:"Apr 6", title:"Always Be Creating Values Video",type:"Video",imp:477,eng:14.26,likes:14,clicks:54},
+  {date:"Apr 7", title:"Blog: Telematics Part 1 — David",type:"Link",imp:446,eng:5.62,likes:9,clicks:16},
+  {date:"Apr 8", title:"DDOT Clip — Tech Adoption",type:"Video",imp:106,eng:10.11,likes:8,clicks:30},
+  {date:"Apr 9", title:"Charlie at NEARS Spring Conference",type:"Picture",imp:298,eng:9.06,likes:13,clicks:13},
+  {date:"Apr 10",title:"Infographic: Visual Breakdown of Demurrage",type:"Graphic",imp:312,eng:66.67,likes:12,clicks:195},
+  {date:"Apr 11",title:"DDOT Clip — Tech for Shortlines",type:"Video",imp:200,eng:9.50,likes:4,clicks:15},
+  {date:"Apr 13",title:"DDOT Clip — Shippers & Tech",type:"Video",imp:233,eng:9.44,likes:8,clicks:14},
+  {date:"Apr 15",title:"DDOT Clip — Telematics + PTC",type:"Video",imp:188,eng:10.64,likes:7,clicks:13},
+  {date:"Apr 16",title:"Harris Hot Takes — Earnings Call",type:"Video",imp:494,eng:16.60,likes:18,clicks:63},
+  {date:"Apr 17",title:"National Haiku Day",type:"Graphic",imp:268,eng:6.34,likes:8,clicks:9},
+  {date:"Apr 20",title:"Q2 2026 Market Consist",type:"Link",imp:658,eng:8.51,likes:14,clicks:40},
+  {date:"Apr 21",title:"Talk Track: Consist Link",type:"Link",imp:219,eng:5.48,likes:3,clicks:9},
+  {date:"Apr 22",title:"Sustainability Blog Repurpose",type:"Link",imp:268,eng:4.85,likes:5,clicks:7},
+  {date:"Apr 23",title:"Talk Track Clip — Chemicals",type:"Video",imp:206,eng:7.28,likes:4,clicks:11},
+  {date:"Apr 24",title:"Harris Hot Takes — Shippers",type:"Video",imp:554,eng:12.27,likes:16,clicks:52},
+  {date:"Apr 27",title:"Consist Takeaways Carousel",type:"Graphic",imp:258,eng:29.84,likes:8,clicks:69},
+  {date:"Apr 29",title:"Talk Track Clip — NEARS",type:"Video",imp:230,eng:10.43,likes:9,clicks:15},
+  {date:"Apr 30",title:"Charlie in Oregon",type:"Picture",imp:282,eng:6.00,likes:6,clicks:10},
 ];
 const LI_2025=[
   {m:"Jan",posts:9,avgEng:27.2,reactions:302,clicks:222,followers:27},
@@ -125,25 +145,62 @@ const LI_2025=[
   {m:"Nov",posts:6,avgEng:11.6,reactions:71,clicks:459,followers:31},
   {m:"Dec",posts:11,avgEng:19.1,reactions:232,clicks:2134,followers:38},
 ];
+
+// ── GA4 DATA ──
 const GA_JAN=[48,50,80,61,75,70,73,126,86,48,52,120,125,539,445,295,102,79,85,98,109,110,76,54,60,70,153,171,119,61,58];
 const GA_FEB=[52,108,116,106,95,83,53,73,109,125,96,107,109,80,79,89,93,114,101,98,58,39,110,248,168,240,170,174];
 const GA_MAR=[159,260,226,228,241,176,86,53,125,139,95,72,100,33,45,92,79,64,71,61,32,39,72,81,58,79,73,34,26,80,87];
+// April estimated from GA4 chart — spike Apr 19-21 from Market Consist post
+const GA_APR=[85,90,95,100,88,75,52,60,95,105,88,80,90,35,95,90,100,92,285,310,270,180,155,160,95,80,245,165,200,175];
 const GA_2025_SESSIONS=[1706,1495,3631,2101,1828,2282,2042,2251,1802,2392,2524,2538];
 const GA_26_MO=[
   {m:"Jan",users:3192,sessions:3727,pv:4689},
   {m:"Feb",users:2657,sessions:3137,pv:4022},
   {m:"Mar",users:2160,sessions:2076,pv:3538},
+  {m:"Apr",users:3100,sessions:3581,pv:4800},
 ];
 const GA_25_MO=[
-  {m:"Jan",users:1359,sessions:1706},{m:"Feb",users:1224,sessions:1495},{m:"Mar",users:2996,sessions:3631},
+  {m:"Jan",users:1359,sessions:1706},{m:"Feb",users:1224,sessions:1495},
+  {m:"Mar",users:2996,sessions:3631},{m:"Apr",users:1543,sessions:2101},
 ];
 
-const POD_TREND=[58,4,4,4,65,55,10,82,83,62,100,92,85,30,34];
-const POD_TREND_LABELS=["Jan '25","Feb '25","Mar '25","Apr '25","May '25","Jun '25","Jul '25","Aug '25","Sep '25","Oct '25","Nov '25","Dec '25","Jan '26","Feb '26","Mar '26"];
-const DDOT_EPS=[{title:"The Age of Visibility",dl:283,date:"2025"},{title:"Don't Dwell On It: Prototype",dl:63,date:"2025"},{title:"Much Ado About Shipping",dl:44,date:"2025"},{title:"DDOT S2 Ep 1",dl:38,date:"Jan '26"},{title:"DDOT S2 Ep 2",dl:22,date:"Feb '26"}];
-const TT_EPS=[{title:"Pride + Intermodal",dl:53,date:"2025"},{title:"A Tale of Two Railroads",dl:44,date:"2025"},{title:"Talk Track: STB",dl:28,date:"Jan '26"},{title:"Talk Track #2 Consist",dl:19,date:"Feb '26"},{title:"Talk Track #3 — Larry Gross",dl:10,date:"Mar '26"}];
+// ── PODCAST DATA ──
+const POD_ALLTIME=895;
+const POD_LAST7=10, POD_LAST30=24, POD_LAST90=99;
+const POD_APPS=[
+  {app:"Apple Podcasts",pct:50,count:427,color:"#FC3C44"},
+  {app:"Web Browser",   pct:16,count:143,color:"#6C9CFC"},
+  {app:"Spotify",       pct:16,count:141,color:"#1DB954"},
+  {app:"Buzzsprout",    pct:6, count:51, color:"#f59e0b"},
+  {app:"Pocket Casts",  pct:2, count:19, color:"#F43E37"},
+  {app:"Other",         pct:10,count:114,color:"#5C6370"},
+];
+const DDOT_EPS=[
+  {title:"The Age of Visibility",       dl:290,date:"Jun '25"},
+  {title:"Don't Dwell On It: Prototype",dl:63, date:"Jan '25"},
+  {title:"Much Ado About Shipping",     dl:46, date:"Aug '25"},
+  {title:"The Tell-Tale Yard",          dl:36, date:"Oct '25"},
+  {title:"Rail in the Time of AI",      dl:34, date:"Dec '25"},
+  {title:"The Little Bet Club",         dl:32, date:"Feb '26"},
+  {title:"The Fast + the Cautious",     dl:31, date:"Mar '26"},
+  {title:"As the Rail Turns",           dl:25, date:"Jan '26"},
+  {title:"Lessor is More",              dl:10, date:"May '26"},
+];
+const TT_EPS=[
+  {title:"Pride + Intermodal",               dl:55,date:"Sep '25"},
+  {title:"A Tale of Two Railroads",          dl:50,date:"Aug '25"},
+  {title:"The Importance of Being Competitive",dl:34,date:"Nov '25"},
+  {title:"Gone With The Freight",            dl:32,date:"Oct '25"},
+  {title:"The STB Strikes Back",             dl:26,date:"Jan '26"},
+  {title:"A Series of Uncertain Events",     dl:23,date:"Feb '26"},
+  {title:"The Intermodal Ultimatum",         dl:22,date:"Mar '26"},
+  {title:"Crude Intentions",                 dl:22,date:"Mar '26"},
+  {title:"Cloudy with a Chance of Carloads", dl:14,date:"Apr '26"},
+];
+const POD_TREND_LABELS=["Jan '25","Feb '25","Mar '25","Apr '25","May '25","Jun '25","Jul '25","Aug '25","Sep '25","Oct '25","Nov '25","Dec '25","Jan '26","Feb '26","Mar '26","Apr '26"];
+const POD_TREND=[58,4,4,4,65,55,10,82,83,62,100,92,85,30,34,14];
 
-const sum=(a)=>a.reduce((s,x)=>s+x,0);
+// ── HELPERS ──
 const sumK=(a,k)=>a.reduce((s,x)=>s+(x[k]||0),0);
 const avgK=(a,k)=>a.length?sumK(a,k)/a.length:0;
 const fmt=n=>typeof n==="number"?n.toLocaleString():n;
@@ -155,28 +212,32 @@ function getPosts(){
   if(period==="jan") return LI_JAN;
   if(period==="feb") return LI_FEB;
   if(period==="mar") return LI_MAR;
-  return [...LI_JAN,...LI_FEB,...LI_MAR];
+  if(period==="apr") return LI_APR;
+  return [...LI_JAN,...LI_FEB,...LI_MAR,...LI_APR];
 }
-function getActive(){ return getPosts().filter(p=>p.eng>0); }
+function getActive(){return getPosts().filter(p=>p.eng>0);}
 
 function pLabel(){
   if(period==="jan") return "January 2026";
   if(period==="feb") return "February 2026";
   if(period==="mar") return "March 2026";
+  if(period==="apr") return "April 2026";
   if(period==="2025") return "2025 Full Year";
-  return "Q1 2026 YTD";
+  return "Jan–Apr 2026 YTD";
 }
 
 function liStats(){
   const active=getActive();
+  const followers={jan:98,feb:22,mar:15,apr:45,ytd:180};
+  const totalFollowers={jan:2335,feb:2357,mar:2372,apr:2417,ytd:2417};
   return {
     posts:getPosts().length,
     imp:sumK(active,"imp"),
     eng:avgK(active,"eng").toFixed(1),
     clicks:sumK(active,"clicks"),
     likes:sumK(active,"likes"),
-    newFollowers:period==="jan"?98:period==="feb"?30:period==="mar"?15:143,
-    totalFollowers:period==="jan"?2335:period==="feb"?2365:period==="mar"?2393:2393,
+    newFollowers:followers[period]||180,
+    totalFollowers:totalFollowers[period]||2417,
   };
 }
 
@@ -184,64 +245,51 @@ function gaStats(){
   if(period==="jan") return GA_26_MO[0];
   if(period==="feb") return GA_26_MO[1];
   if(period==="mar") return GA_26_MO[2];
-  if(period==="ytd") return {
-    users:GA_26_MO[0].users+GA_26_MO[1].users+GA_26_MO[2].users,
-    sessions:GA_26_MO[0].sessions+GA_26_MO[1].sessions+GA_26_MO[2].sessions,
-    pv:GA_26_MO[0].pv+GA_26_MO[1].pv+GA_26_MO[2].pv,
+  if(period==="apr") return GA_26_MO[3];
+  return {
+    users:GA_26_MO.reduce((s,m)=>s+m.users,0),
+    sessions:GA_26_MO.reduce((s,m)=>s+m.sessions,0),
+    pv:GA_26_MO.reduce((s,m)=>s+m.pv,0),
   };
-  return {users:sumK(GA_25_MO,"users"),sessions:GA_2025_SESSIONS.reduce((a,b)=>a+b,0),pv:38838};
 }
 
 function kpi(label,value,sub){
   return `<div class="kpi"><div class="kpi-label">${label}</div><div class="kpi-value">${value}</div>${sub?`<div class="kpi-sub">${sub}</div>`:""}</div>`;
 }
-
 function secHTML(icon,title,sub=""){
   return `<div class="sec"><span style="font-size:15px">${icon}</span><div><h3>${title}</h3>${sub?`<div class="sec-sub">${sub}</div>`:""}</div></div>`;
 }
-
 function storyHTML(title,text){
-  return `<div class="story"><div class="story-title"><div class="story-bar"></div><h4 style="font-size:12px;font-weight:700;color:${C.green};margin:0">${title}</h4></div><div class="story-text">${text}</div></div>`;
-}
-
-function destroyChart(id){
-  if(charts[id]){charts[id].destroy();delete charts[id];}
+  return `<div class="story"><div style="display:flex;align-items:center;gap:6px;margin-bottom:10px"><div class="story-bar"></div><h4 style="font-size:12px;font-weight:700;color:#34FFA4;margin:0">${title}</h4></div><div class="story-text">${text}</div></div>`;
 }
 
 function renderApp(){
-  document.getElementById("app").innerHTML = buildHTML();
+  document.getElementById("app").innerHTML=buildHTML();
   attachListeners();
-  setTimeout(renderCharts, 50);
+  setTimeout(renderCharts,50);
 }
 
 function buildHTML(){
-  let html = buildHeader() + buildTabs() + buildPills();
-  if(platform==="linkedin") html += buildLinkedin();
-  else if(platform==="website") html += buildWebsite();
-  else html += buildPodcast();
-  html += `<div style="text-align:center;margin-top:32px;padding-top:14px;border-top:1px solid ${C.border};font-size:9px;color:${C.t3}">
-    Telegraph · Marketing Dashboard · LinkedIn + GA4 + Buzzsprout<br>Last updated ${LAST_UPDATED}
-  </div>`;
+  let html=buildHeader()+buildTabs()+buildPills();
+  if(platform==="linkedin") html+=buildLinkedin();
+  else if(platform==="website") html+=buildWebsite();
+  else html+=buildPodcast();
+  html+=`<div style="text-align:center;margin-top:32px;padding-top:14px;border-top:1px solid ${C.border};font-size:9px;color:${C.t3}">Telegraph · Marketing Dashboard · LinkedIn + GA4 + Buzzsprout<br>Last updated ${LAST_UPDATED}</div>`;
   return html;
 }
 
 function buildHeader(){
-  return `
-  <div style="text-align:center;margin-bottom:24px">
-    <div class="card" style="text-align:left;margin-bottom:0">
+  return `<div style="text-align:center;margin-bottom:24px">
+    <div class="card" style="text-align:left">
       <div style="font-size:12px;font-weight:700;color:${C.t1};margin-bottom:8px">📋 About This Dashboard</div>
       <p style="font-size:11px;color:${C.t2};margin:0 0 10px;line-height:1.7">This dashboard tracks Telegraph's organic marketing performance across LinkedIn, the company website, and our podcast network. Updated monthly — designed to give leadership a clear, data-driven view of content impact, audience growth, and website traffic.</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-        ${[["LinkedIn","Post-level impressions, engagement, clicks, reactions + follower growth."],["Website","Google Analytics 4 traffic trends, YoY growth, and LinkedIn-to-web impact."],["Podcast","Buzzsprout data — episode downloads, platform breakdown, listener growth."]].map(([l,d])=>`
-          <div style="flex:1 1 160px;background:${C.bgDeep};border-radius:8px;padding:10px 12px;border:1px solid ${C.border}">
-            <div style="font-size:10px;font-weight:700;color:${C.green};margin-bottom:4px">${l}</div>
-            <div style="font-size:10px;color:${C.t3};line-height:1.6">${d}</div>
-          </div>`).join("")}
+        ${[["LinkedIn","Post-level impressions, engagement, clicks, reactions + follower growth."],["Website","Google Analytics 4 traffic trends, YoY growth, and LinkedIn-to-web impact."],["Podcast","Buzzsprout data for Don't Dwell On It + Talk Track — downloads, platforms, listener growth."]].map(([l,d])=>`<div style="flex:1 1 160px;background:${C.bgDeep};border-radius:8px;padding:10px 12px;border:1px solid ${C.border}"><div style="font-size:10px;font-weight:700;color:${C.green};margin-bottom:4px">${l}</div><div style="font-size:10px;color:${C.t3};line-height:1.6">${d}</div></div>`).join("")}
       </div>
       <div style="padding-top:10px;border-top:1px solid ${C.border};font-size:10px;color:${C.t3}">📡 Data: LinkedIn Organic · Google Analytics 4 · Buzzsprout</div>
     </div>
     <div style="display:inline-flex;align-items:center;gap:6px;margin:28px 0 12px">
-      <div style="width:8px;height:8px;border-radius:50%;background:${C.green};box-shadow:0 0 14px ${C.green}88"></div>
+      <div style="width:8px;height:8px;border-radius:50%;background:${C.green};box-shadow:0 0 14px ${C.greenMuted}"></div>
       <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:3px;color:${C.green}">Telegraph Marketing</span>
     </div>
     <h1 style="font-size:48px;font-weight:800;color:#fff;margin:0 0 8px;letter-spacing:-2px;line-height:1.1">Marketing <span style="color:${C.green}">Dashboard</span></h1>
@@ -263,8 +311,14 @@ function buildTabs(){
 
 function buildPills(){
   if(platform==="podcast") return "";
-  const pills=[["ytd","Q1 2026 YTD"],["jan","January"],["feb","February"],["mar","March"],["2025","2025 Full Year"]];
-  return `<div class="pill-row">${pills.map(([v,l])=>`<button class="pill ${period===v?"active":""}" data-period="${v}">${l}</button>`).join("")}</div>`;
+  return `<div class="pill-row">
+    <button class="pill ${period==="ytd"?"active":""}" data-period="ytd">2026 YTD</button>
+    <button class="pill ${period==="jan"?"active":""}" data-period="jan">January</button>
+    <button class="pill ${period==="feb"?"active":""}" data-period="feb">February</button>
+    <button class="pill ${period==="mar"?"active":""}" data-period="mar">March</button>
+    <button class="pill ${period==="apr"?"active":""}" data-period="apr">April</button>
+    <button class="pill ${period==="2025"?"active":""}" data-period="2025">2025 Full Year</button>
+  </div>`;
 }
 
 function buildLinkedin(){
@@ -273,17 +327,16 @@ function buildLinkedin(){
   const pl=pLabel();
 
   if(period==="2025"){
-    const totalClicks=sumK(LI_2025,"clicks"), totalReactions=sumK(LI_2025,"reactions"), totalFollowers=sumK(LI_2025,"followers");
-    return `
-    <div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">${pl} · LinkedIn</span></div>
+    const tc=sumK(LI_2025,"clicks"),tr=sumK(LI_2025,"reactions"),tf=sumK(LI_2025,"followers");
+    return `<div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">${pl} · LinkedIn</span></div>
     <div class="kpi-grid">
       ${kpi("Total Posts","131","Full year 2025")}
       ${kpi("Avg Engagement",avgK(LI_2025,"avgEng").toFixed(1)+"%","Avg across all posts")}
-      ${kpi("Total Clicks",fmt(totalClicks),"Across all posts")}
-      ${kpi("Followers Gained",totalFollowers,"+613 net organic")}
+      ${kpi("Total Clicks",fmt(tc),"Across all posts")}
+      ${kpi("Followers Gained",tf,"+613 net organic")}
     </div>
     <div class="kpi-grid">
-      ${kpi("Total Reactions",fmt(totalReactions),"Across all posts")}
+      ${kpi("Total Reactions",fmt(tr),"Across all posts")}
       ${kpi("Start Followers","1,665","December 2024")}
       ${kpi("End Followers","2,278","+37% growth")}
     </div>
@@ -292,9 +345,7 @@ function buildLinkedin(){
     ${storyHTML("2025 Year in Review","Followers grew <strong style='color:"+C.green+"'>from 1,665 to 2,278 (+37%)</strong>. March surged +187 followers. October peaked with the Chicago Marathon post at 6,579 impressions. Cadence scaled from ~6 to 17 posts/month.")}`;
   }
 
-  // Content type analysis
-  const counts={};
-  const engByType={};
+  const counts={},engByType={};
   active.forEach(p=>{
     counts[p.type]=(counts[p.type]||0)+1;
     if(!engByType[p.type]) engByType[p.type]={total:0,count:0};
@@ -302,10 +353,9 @@ function buildLinkedin(){
   });
   const typeData=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
   const total=typeData.reduce((s,[,v])=>s+v,0);
-
   const top10=[...active].sort((a,b)=>b.eng-a.eng).slice(0,10);
 
-  const contentMixRows=typeData.map(([name,count],i)=>{
+  const contentMixRows=typeData.map(([name,count])=>{
     const e=engByType[name];
     const ae=e?(e.total/e.count).toFixed(1):"—";
     const pct=Math.round((count/total)*100);
@@ -317,9 +367,7 @@ function buildLinkedin(){
         <div style="font-size:11px;font-weight:700;color:${C.t1}">${count} posts</div>
       </div>
       <div style="padding-left:18px;display:flex;gap:10px;align-items:center">
-        <div style="height:4px;border-radius:2px;background:${C.border};flex:1;overflow:hidden">
-          <div style="width:${pct}%;height:100%;background:${col};border-radius:2px;opacity:.7"></div>
-        </div>
+        <div style="height:4px;border-radius:2px;background:${C.border};flex:1;overflow:hidden"><div style="width:${pct}%;height:100%;background:${col};border-radius:2px;opacity:.7"></div></div>
         <div style="font-size:10px;color:${C.t3};flex-shrink:0;width:100px;text-align:right">avg ${ae}% eng · ${pct}%</div>
       </div>
     </div>`;
@@ -328,41 +376,39 @@ function buildLinkedin(){
   const top10Rows=top10.map((p,i)=>{
     const col=TYPE_COLORS[p.type]||C.blue;
     const barW=Math.min((p.eng/80)*100,100);
-    let numBg=i===0?C.green:i===1?C.border:"transparent";
-    let numColor=i===0?"#10173D":C.t1;
-    let numBorder=i>1?`1px solid ${C.border}`:"none";
-    return `<div class="post-row">
-      <div style="width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;color:${numColor};background:${numBg};border:${numBorder}">${i+1}</div>
+    return `<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px">
+      <div style="width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;color:${i===0?"#10173D":C.t1};background:${i===0?C.green:i===1?C.border:"transparent"};border:${i>1?`1px solid ${C.border}`:"none"}">${i+1}</div>
       <div style="flex:1;min-width:0">
         <div style="font-weight:600;color:${C.t1};font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.title}</div>
         <div style="display:flex;gap:6px;align-items:center;margin-top:3px;flex-wrap:wrap">
-          <span class="type-tag" style="background:${col}22;color:${col}">${p.type}</span>
+          <span style="font-size:9px;padding:1px 6px;border-radius:8px;background:${col}22;color:${col};font-weight:600">${p.type}</span>
           <span style="font-size:9px;color:${C.t3}">${p.date}</span>
           <span style="font-size:9px;color:${C.t3}">${fmt(p.imp)} imp</span>
           <span style="font-size:9px;color:${C.t3}">${fmt(p.clicks)} clicks</span>
         </div>
         <div class="progress-bar"><div class="progress-fill" style="width:${barW}%;background:${i===0?C.green:C.periwinkle}"></div></div>
       </div>
-      <div style="text-align:right;flex-shrink:0;margin-left:8px">
+      <div style="text-align:right;flex-shrink:0">
         <div style="font-size:16px;font-weight:800;color:${i===0?C.green:C.t1}">${p.eng.toFixed(1)}%</div>
         <div style="font-size:9px;color:${C.t3}">eng</div>
       </div>
     </div>`;
   }).join("");
 
+  const prevEng={jan:"vs 27.2% Jan '25",feb:"vs 14.6% Feb '25",mar:"vs 17.6% Mar '25",apr:"vs 13.0% Apr '25",ytd:"Jan–Apr 2026"};
   const stories={
-    jan:`January was headlined by <strong style="color:${C.green}">AITX Partnership</strong> (1,240 imp, 47 reactions) + <strong style="color:${C.green}">Charlie at MARS</strong> (1,482 imp, 17.6% eng). Market Consist PDF hit 34% engagement with 110 clicks. Closed with +98 new followers, the strongest single month in Telegraph history at that time.`,
-    feb:`<strong style="color:${C.green}">Day in the Life: Caleb dominated</strong> with 77.8% engagement + 614 clicks. Valentine's content averaged 37% combined. The Railroads Friends blog sparked a late-month website surge that became the #2 most visited page. 18 posts = 3.6x February 2025 cadence.`,
+    jan:`January was headlined by <strong style="color:${C.green}">AITX Partnership</strong> (1,240 imp, 47 reactions) + <strong style="color:${C.green}">Charlie at MARS</strong> (1,482 imp, 17.6% eng). Market Consist PDF hit 34% engagement with 110 clicks. Closed with +98 new followers.`,
+    feb:`<strong style="color:${C.green}">Day in the Life: Caleb dominated</strong> with 77.8% engagement + 614 clicks. Valentine's content averaged 37% combined. The Railroads Friends blog sparked a late-month website surge. 18 posts = 3.6x February 2025 cadence.`,
     mar:`March was defined by <strong style="color:${C.green}">people-first content dominating</strong> — Employee Appreciation (70.4% eng, 647 clicks) + Team Childhood Photos (72.4% eng, 604 clicks). National Cocktail Day hit 63.3%. 4 of the top 5 posts were team photos or spotlights.`,
-    ytd:`<strong style="color:${C.green}">49 posts in Q1 2026</strong> vs. 23 same period in 2025 — more than doubled. All three months cleared the 6% engagement goal. The content formula: <strong style="color:${C.green}">team photos + interactive formats + industry analysis</strong>. +143 followers in Q1.`,
+    apr:`April's standout was the <strong style="color:${C.green}">Demurrage Infographic Carousel</strong> at 66.7% engagement + 195 clicks — the highest click post of the month. Harris Hot Takes on Earnings Call (16.6%) + Consist Takeaways Carousel (29.8%) showed industry analysis content resonating strongly. 21 posts vs. 6 in April 2025 — a 3.5x cadence increase.`,
+    ytd:`<strong style="color:${C.green}">71 posts in Jan–Apr 2026</strong> vs. 27 same period in 2025 — more than doubled. The content formula is consistent: <strong style="color:${C.green}">team photos + infographics + industry analysis</strong>. +180 followers puts Telegraph on pace for 540+ in 2026. Every month has cleared the 6% engagement goal.`,
   };
 
-  return `
-  <div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">${pl} · LinkedIn</span></div>
+  return `<div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">${pl} · LinkedIn</span></div>
   <div class="kpi-grid">
-    ${kpi("Total Posts",s.posts,period==="ytd"?"Q1 2026":period==="jan"?"January":period==="feb"?"February":"March")}
+    ${kpi("Total Posts",s.posts,period==="ytd"?"Jan–Apr 2026":pLabel())}
     ${kpi("Total Impressions",fmt(s.imp),Math.round(s.imp/s.posts).toLocaleString()+" avg per post")}
-    ${kpi("Avg Engagement",s.eng+"%",period==="mar"?"vs 17.6% Mar '25":period==="feb"?"vs 14.6% Feb '25":period==="jan"?"vs 27.2% Jan '25":"Q1 2026")}
+    ${kpi("Avg Engagement",s.eng+"%",prevEng[period]||"2026")}
     ${kpi("Total Clicks",fmt(s.clicks),Math.round(s.clicks/s.posts)+" avg per post")}
   </div>
   <div class="kpi-grid">
@@ -384,7 +430,7 @@ function buildLinkedin(){
       ${top10Rows}
     </div>
   </div>
-  ${storyHTML(pl+" — Key Takeaways", stories[period]||stories.ytd)}`;
+  ${storyHTML(pl+" — Key Takeaways",stories[period]||stories.ytd)}`;
 }
 
 function buildWebsite(){
@@ -392,8 +438,7 @@ function buildWebsite(){
   const pl=pLabel();
 
   if(period==="2025"){
-    return `
-    <div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">${pl} · Website</span></div>
+    return `<div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">${pl} · Website</span></div>
     <div class="kpi-grid">
       ${kpi("Total Users","22,008","Full year 2025")}
       ${kpi("Total Sessions","26,591","Full year 2025")}
@@ -408,39 +453,39 @@ function buildWebsite(){
     jan:{cur:[3192,3727,4689],prev:[1359,1706,2575],label:"Jan"},
     feb:{cur:[2657,3137,4022],prev:[1224,1495,2383],label:"Feb"},
     mar:{cur:[2160,2076,3538],prev:[2996,3631,5475],label:"Mar"},
+    apr:{cur:[3100,3581,4800],prev:[1543,2101,3309],label:"Apr"},
   };
   const yoy=yoyMap[period];
-
   const yoyCards=yoy?["Users","Sessions","Page Views"].map((l,i)=>{
-    const cur=yoy.cur[i], prev=yoy.prev[i];
-    const chg=(((cur-prev)/prev)*100).toFixed(0), up=chg>0;
+    const cur=yoy.cur[i],prev=yoy.prev[i];
+    const chg=(((cur-prev)/prev)*100).toFixed(0),up=chg>0;
     return `<div style="background:${C.bgCard};border:1px solid ${C.border};border-radius:10px;padding:12px 14px;flex:1;min-width:100px">
       <div style="font-size:9px;color:${C.t3};font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.6px">${l} YoY</div>
       <div style="font-size:18px;font-weight:800;color:${up?C.green:C.red}">${up?"+":""}${chg}%</div>
       <div style="font-size:9px;color:${C.t2};margin-top:2px">${fmt(cur)} vs ${fmt(prev)}</div>
       <div style="font-size:9px;color:${C.t3}">${yoy.label} '26 vs ${yoy.label} '25</div>
     </div>`;
-  }).join("") : "";
+  }).join(""):"";
 
   const stories={
-    jan:`A <strong style="color:${C.green}">massive 3-day spike Jan 14–16</strong> (513, 383, 243 daily users) driven by the AITX press release. Users more than doubled YoY (3,192 vs. 1,359).`,
-    feb:`Late-month surge <strong style="color:${C.green}">(Feb 24–28: 150–236 daily users)</strong> driven by the Railroads Friends merger blog — the site's #2 most visited page. Users more than doubled YoY (2,657 vs. 1,224).`,
-    mar:`March opened strong with a <strong style="color:${C.green}">spike in the first week (Mar 1–6: 159–260 daily sessions)</strong> tied to Employee Appreciation + Talk Track content. Users were down vs. March 2025 — March 2025 was an outlier boosted by major partnership announcements.`,
-    ytd:`<strong style="color:${C.green}">7,009 users + 7,940 sessions in Q1 2026</strong> vs. 5,579 users same period 2025 — up 26%. <strong style="color:${C.green}">LinkedIn remains the primary traffic driver</strong> — every major content spike maps directly to a post.`,
+    jan:`A <strong style="color:${C.green}">massive 3-day spike Jan 14–16</strong> driven by the AITX press release. Users more than doubled YoY (3,192 vs. 1,359).`,
+    feb:`Late-month surge <strong style="color:${C.green}">(Feb 24–28)</strong> driven by the Railroads Friends merger blog — the site's #2 most visited page. Users more than doubled YoY.`,
+    mar:`March opened strong with a <strong style="color:${C.green}">spike in the first week</strong> tied to Employee Appreciation + Talk Track content. Users down vs. March 2025 — that month was an outlier boosted by major partnership announcements.`,
+    apr:`April's <strong style="color:${C.green}">biggest spike hit April 19–21</strong> tied to the Q2 Market Consist post (658 impressions, strong click-through). Users doubled YoY (3,100 vs. 1,543) — the strongest month-over-month recovery of the quarter. Direct traffic dominated at 70% but Organic Social had the highest session quality at 53% engagement rate.`,
+    ytd:`<strong style="color:${C.green}">11,109 users + 12,521 sessions in Jan–Apr 2026</strong> — up significantly vs. same period 2025. LinkedIn remains the primary traffic spike driver. Organic Social traffic (just 2.2% of sessions) delivers the highest quality visits at 227s avg session duration.`,
   };
 
-  return `
-  <div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">${pl} · Website</span></div>
+  return `<div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">${pl} · Website</span></div>
   <div class="kpi-grid">
-    ${kpi("Active Users",fmt(g.users),period==="ytd"?"Q1 2026 total":pl)}
-    ${kpi("Sessions",fmt(g.sessions),period==="ytd"?"Q1 2026 total":pl)}
-    ${kpi("Page Views",fmt(g.pv),period==="ytd"?"Q1 2026 total":pl)}
+    ${kpi("Active Users",fmt(g.users),period==="ytd"?"Jan–Apr 2026 total":pl)}
+    ${kpi("Sessions",fmt(g.sessions),period==="ytd"?"Jan–Apr 2026 total":pl)}
+    ${kpi("Page Views",fmt(g.pv),period==="ytd"?"Jan–Apr 2026 total":pl)}
   </div>
   ${yoy?`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">${yoyCards}</div>`:""}
-  ${secHTML("📈","Daily Traffic","Active users and sessions by day")}
+  ${secHTML("📈","Daily Traffic","Sessions by day")}
   <div class="card"><canvas id="chartGA"></canvas></div>
-  ${period!=="2025" ? buildAudienceInsights() : ""}
-  ${storyHTML(pl+" — Key Takeaways", stories[period]||stories.ytd)}`;
+  ${period!=="ytd"?buildAudienceInsights():""}
+  ${storyHTML(pl+" — Key Takeaways",stories[period]||stories.ytd)}`;
 }
 
 function buildAudienceInsights(){
@@ -453,28 +498,24 @@ function buildAudienceInsights(){
     ${kpi("N. America Total","67%","US + Mexico + Canada")}
     ${kpi("Desktop Share","68%","of all sessions")}
   </div>
-  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+  <div class="side-by-side" style="margin-bottom:12px">
     <div class="half-card">
       <div style="font-size:11px;font-weight:700;color:${C.t1};margin-bottom:12px">Top Countries <span style="font-size:9px;font-weight:400;color:${C.t3}">(bot-adjusted)</span></div>
-      ${[["🇺🇸 United States",5306,100],["🇲🇽 Mexico",631,12],["🇨🇦 Canada",514,10],["🇮🇳 India",200,4],["🇩🇪 Germany",109,2],["🇬🇧 United Kingdom",63,1.5]].map(([label,val,pct])=>`
+      ${[["🇺🇸 United States",5306,100],["🇲🇽 Mexico",631,12],["🇨🇦 Canada",514,10],["🇮🇳 India",200,4],["🇩🇪 Germany",109,2],["🇬🇧 United Kingdom",63,1.5]].map(([l,v,p])=>`
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
-          <div style="font-size:11px;color:${C.t2};min-width:130px;flex-shrink:0">${label}</div>
-          <div style="flex:1;height:6px;border-radius:3px;background:${C.border};overflow:hidden">
-            <div style="width:${pct}%;height:100%;background:${C.blue};border-radius:3px;opacity:.85"></div>
-          </div>
-          <div style="font-size:11px;font-weight:700;color:${C.t1};min-width:40px;text-align:right">${val.toLocaleString()}</div>
+          <div style="font-size:11px;color:${C.t2};min-width:130px;flex-shrink:0">${l}</div>
+          <div style="flex:1;height:6px;border-radius:3px;background:${C.border};overflow:hidden"><div style="width:${p}%;height:100%;background:${C.blue};border-radius:3px;opacity:.85"></div></div>
+          <div style="font-size:11px;font-weight:700;color:${C.t1};min-width:40px;text-align:right">${v.toLocaleString()}</div>
         </div>`).join("")}
       <div style="margin-top:10px;padding-top:10px;border-top:1px solid ${C.border};font-size:10px;color:${C.yellow}">⚠ China (1,649) + Singapore (397) excluded — bot signals</div>
     </div>
     <div class="half-card">
       <div style="font-size:11px;font-weight:700;color:${C.t1};margin-bottom:12px">Top US States <span style="font-size:9px;font-weight:400;color:${C.t3}">(bot-adjusted)</span></div>
-      ${[["California",879,100],["Illinois",500,57],["New York",358,41],["Texas",304,35],["Florida",257,29],["Colorado",224,25],["Massachusetts",147,17]].map(([label,val,pct])=>`
+      ${[["California",879,100],["Illinois",500,57],["New York",358,41],["Texas",304,35],["Florida",257,29],["Colorado",224,25],["Massachusetts",147,17]].map(([l,v,p])=>`
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
-          <div style="font-size:11px;color:${C.t2};min-width:110px;flex-shrink:0">${label}</div>
-          <div style="flex:1;height:6px;border-radius:3px;background:${C.border};overflow:hidden">
-            <div style="width:${pct}%;height:100%;background:${C.green};border-radius:3px;opacity:.85"></div>
-          </div>
-          <div style="font-size:11px;font-weight:700;color:${C.t1};min-width:35px;text-align:right">${val}</div>
+          <div style="font-size:11px;color:${C.t2};min-width:110px;flex-shrink:0">${l}</div>
+          <div style="flex:1;height:6px;border-radius:3px;background:${C.border};overflow:hidden"><div style="width:${p}%;height:100%;background:${C.green};border-radius:3px;opacity:.85"></div></div>
+          <div style="font-size:11px;font-weight:700;color:${C.t1};min-width:35px;text-align:right">${v}</div>
         </div>`).join("")}
       <div style="margin-top:10px;padding-top:10px;border-top:1px solid ${C.border};font-size:10px;color:${C.yellow}">⚠ Virginia (1,110 raw) excluded — bot traffic</div>
     </div>
@@ -482,48 +523,40 @@ function buildAudienceInsights(){
   <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">
     <div style="flex:1 1 160px;background:${C.bgCard};border:1px solid ${C.border};border-radius:12px;padding:16px">
       <div style="font-size:11px;font-weight:700;color:${C.t1};margin-bottom:12px">Device Breakdown</div>
-      ${[["Desktop","68%","72s avg","#378ADD"],["Mobile","29%","54s avg","#1D9E75"],["Tablet","3%","116s avg","#7F77DD"]].map(([d,pct,dur,col])=>`
+      ${[["Desktop","68%","72s avg","#378ADD"],["Mobile","29%","54s avg","#1D9E75"],["Tablet","3%","116s avg","#7F77DD"]].map(([d,p,dur,col])=>`
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
           <div style="width:10px;height:10px;border-radius:2px;background:${col};flex-shrink:0"></div>
           <div style="flex:1;font-size:11px;color:${C.t2}">${d}</div>
-          <div style="font-size:11px;font-weight:700;color:${C.t1}">${pct}</div>
+          <div style="font-size:11px;font-weight:700;color:${C.t1}">${p}</div>
           <div style="font-size:10px;color:${C.t3}">${dur}</div>
         </div>
-        <div style="height:4px;border-radius:2px;background:${C.border};overflow:hidden;margin-bottom:8px">
-          <div style="width:${pct};height:100%;background:${col};border-radius:2px;opacity:.8"></div>
-        </div>`).join("")}
+        <div style="height:4px;border-radius:2px;background:${C.border};overflow:hidden;margin-bottom:8px"><div style="width:${p};height:100%;background:${col};border-radius:2px;opacity:.8"></div></div>`).join("")}
     </div>
     <div style="flex:1 1 160px;background:${C.bgCard};border:1px solid ${C.border};border-radius:12px;padding:16px">
       <div style="font-size:11px;font-weight:700;color:${C.t1};margin-bottom:12px">Traffic Channels</div>
-      ${[["Direct","71%","47s avg","#378ADD"],["Organic Search","14%","117s avg","#1D9E75"],["Organic Social","4%","227s avg","#D4537E"],["Referral","4%","150s avg","#EF9F27"],["Email","3%","155s avg","#C084FC"]].map(([d,pct,dur,col])=>`
+      ${[["Direct","71%","47s avg","#378ADD"],["Organic Search","14%","117s avg","#1D9E75"],["Organic Social","4%","227s avg","#D4537E"],["Referral","4%","150s avg","#EF9F27"],["Email","3%","155s avg","#C084FC"]].map(([d,p,dur,col])=>`
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
           <div style="width:10px;height:10px;border-radius:2px;background:${col};flex-shrink:0"></div>
           <div style="flex:1;font-size:11px;color:${C.t2}">${d}</div>
-          <div style="font-size:11px;font-weight:700;color:${C.t1}">${pct}</div>
+          <div style="font-size:11px;font-weight:700;color:${C.t1}">${p}</div>
           <div style="font-size:10px;color:${C.t3}">${dur}</div>
         </div>`).join("")}
     </div>
     <div style="flex:1 1 160px;background:${C.bgCard};border:1px solid ${C.border};border-radius:12px;padding:16px">
       <div style="font-size:11px;font-weight:700;color:${C.t1};margin-bottom:12px">Operating System</div>
-      ${[["Windows","41%","#378ADD"],["Android","22%","#1D9E75"],["Mac","16%","#7F77DD"],["iOS","9%","#EF9F27"],["Linux (bots)","12%","#5C6370"]].map(([d,pct,col])=>`
+      ${[["Windows","41%","#378ADD"],["Android","22%","#1D9E75"],["Mac","16%","#7F77DD"],["iOS","9%","#EF9F27"],["Linux (bots)","12%","#5C6370"]].map(([d,p,col])=>`
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
           <div style="width:10px;height:10px;border-radius:2px;background:${col};flex-shrink:0"></div>
           <div style="flex:1;font-size:11px;color:${C.t2}">${d}</div>
-          <div style="font-size:11px;font-weight:700;color:${C.t1}">${pct}</div>
+          <div style="font-size:11px;font-weight:700;color:${C.t1}">${p}</div>
         </div>`).join("")}
     </div>
   </div>
   <div style="background:${C.bgCard};border:1px solid ${C.border};border-radius:12px;padding:16px;margin-bottom:8px">
     <div style="font-size:11px;font-weight:700;color:${C.t1};margin-bottom:12px">Channel Quality — Engagement Rate vs. Avg Session Duration</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      ${[
-        ["Organic Social","227s avg session","50% bounce rate","✓ Best quality",C.green,C.greenDim],
-        ["Referral","150s avg session","47% bounce rate","✓ High intent",C.green,C.greenDim],
-        ["Organic Search","117s avg session","48% bounce rate","✓ Strong SEO signal",C.green,C.greenDim],
-        ["Email","155s avg session","67% bounce rate","ℹ Small but engaged",C.periwinkle,C.periwinkleDim],
-        ["Direct","47s avg session","84% bounce rate","⚠ Includes bot traffic",C.yellow,"rgba(255,209,102,0.12)"],
-      ].map(([ch,dur,br,tag,col,bg])=>`
-        <div style="flex:1 1 120px;background:${bg};border:1px solid ${col}33;border-radius:8px;padding:10px 12px">
+      ${[["Organic Social","227s avg","50% bounce","✓ Best quality",C.green,C.greenDim],["Referral","150s avg","47% bounce","✓ High intent",C.green,C.greenDim],["Organic Search","117s avg","48% bounce","✓ Strong SEO",C.green,C.greenDim],["Email","155s avg","67% bounce","ℹ Small but engaged",C.periwinkle,C.periwinkleDim],["Direct","47s avg","84% bounce","⚠ Includes bots",C.yellow,"rgba(255,209,102,0.12)"]].map(([ch,dur,br,tag,col,bg])=>`
+        <div style="flex:1 1 100px;background:${bg};border:1px solid ${col}33;border-radius:8px;padding:10px 12px">
           <div style="font-size:11px;font-weight:600;color:${C.t1};margin-bottom:4px">${ch}</div>
           <div style="font-size:10px;color:${C.t3};margin-bottom:2px">${dur}</div>
           <div style="font-size:10px;color:${C.t3};margin-bottom:6px">${br}</div>
@@ -536,11 +569,8 @@ function buildAudienceInsights(){
 function buildPodcast(){
   const epRows=(eps,color)=>eps.map((ep,i)=>{
     const barW=Math.round((ep.dl/eps[0].dl)*100);
-    let numBg=i===0?color:i===1?C.border:"transparent";
-    let numCol=i===0?"#10173D":C.t1;
-    let numBorder=i>1?`1px solid ${C.border}`:"none";
     return `<div class="ep-row" style="border-color:${i===0?color+"55":C.border}">
-      <div class="ep-num" style="color:${numCol};background:${numBg};border:${numBorder}">${i+1}</div>
+      <div style="width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;color:${i===0?"#10173D":C.t1};background:${i===0?color:i===1?C.border:"transparent"};border:${i>1?`1px solid ${C.border}`:"none"}">${i+1}</div>
       <div style="flex:1;min-width:0">
         <div style="font-weight:600;color:${C.t1};font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${ep.title}</div>
         <div class="progress-bar" style="margin-top:5px"><div class="progress-fill" style="width:${barW}%;background:${color};opacity:.8"></div></div>
@@ -552,32 +582,26 @@ function buildPodcast(){
     </div>`;
   }).join("");
 
-  const apps=[
-    {app:"Apple Podcasts",pct:43,count:38,color:"#FC3C44"},
-    {app:"Spotify",pct:22,count:20,color:"#1DB954"},
-    {app:"Web Browser",pct:6,count:5,color:C.blue},
-    {app:"Pocket Casts",pct:6,count:5,color:"#F43E37"},
-    {app:"Podcast Addict",pct:6,count:5,color:"#f59e0b"},
-    {app:"Other",pct:17,count:15,color:C.t3},
-  ];
-
-  return `
-  <div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">Don't Dwell On It + Talk Track · All Time</span></div>
+  return `<div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">Don't Dwell On It + Talk Track · All Time</span></div>
   <div class="kpi-grid">
-    ${kpi("All-Time Downloads","750","Since launch")}
-    ${kpi("Last 30 Days","65","Downloads")}
-    ${kpi("Last 90 Days","251","Downloads")}
-    ${kpi("Next Ep Forecast","29","Buzzsprout prediction")}
+    ${kpi("All-Time Downloads",fmt(POD_ALLTIME),"Since launch")}
+    ${kpi("Last 30 Days",POD_LAST30,"Downloads")}
+    ${kpi("Last 90 Days",POD_LAST90,"Downloads")}
+    ${kpi("Last 7 Days",POD_LAST7,"Downloads")}
   </div>
   <div class="kpi-grid">
-    ${kpi("Last 7 Days","34","Downloads")}
-    <div class="card" style="flex:3 1 300px">
-      <div style="font-size:10px;font-weight:600;color:${C.t3};text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Top Platform</div>
-      <div style="font-size:14px;font-weight:700;color:${C.t1}">Apple Podcasts <span style="color:${C.green}">43%</span> · Spotify <span style="color:${C.green}">22%</span></div>
-      <div style="font-size:10px;color:${C.t3};margin-top:4px">Based on last 5 episodes</div>
+    <div class="card" style="flex:1">
+      <div class="kpi-label">Top Platform</div>
+      <div style="font-size:14px;font-weight:700;color:${C.t1}">🍎 Apple Podcasts <span style="color:${C.green}">50%</span> · 🟢 Spotify <span style="color:${C.green}">16%</span></div>
+      <div class="kpi-sub">All episodes · Buzzsprout data</div>
+    </div>
+    <div class="card" style="flex:1">
+      <div class="kpi-label">Top Device</div>
+      <div style="font-size:14px;font-weight:700;color:${C.t1}">📱 Apple iPhone <span style="color:${C.green}">69%</span></div>
+      <div class="kpi-sub">Mobile 75% of all listens</div>
     </div>
   </div>
-  ${secHTML("📈","Monthly Download Trend","Jan 2025 to Mar 2026")}
+  ${secHTML("📈","Monthly Download Trend","Jan 2025 to Apr 2026")}
   <div class="card"><canvas id="chartPod"></canvas></div>
   ${secHTML("🏆","Top Episodes by Downloads")}
   <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
@@ -586,58 +610,44 @@ function buildPodcast(){
     <button class="pill ${podSeries==="talktrack"?"active":""}" data-pod="talktrack">Talk Track</button>
   </div>
   ${(podSeries==="all"||podSeries==="ddot")?`
-    ${podSeries==="all"?`<div style="font-size:11px;font-weight:700;color:${C.periwinkle};margin-bottom:8px;letter-spacing:.5px">DON'T DWELL ON IT</div>`:""}
+    ${podSeries==="all"?`<div style="font-size:11px;font-weight:700;color:${C.green};margin-bottom:8px;letter-spacing:.5px">DON'T DWELL ON IT</div>`:""}
     <div style="margin-bottom:${podSeries==="all"?18:0}px">${epRows(DDOT_EPS,C.green)}</div>`:""}
   ${(podSeries==="all"||podSeries==="talktrack")?`
     ${podSeries==="all"?`<div style="font-size:11px;font-weight:700;color:${C.periwinkle};margin-bottom:8px;letter-spacing:.5px">TALK TRACK</div>`:""}
     ${epRows(TT_EPS,C.periwinkle)}`:""}
-  ${secHTML("📱","Platform Breakdown","Last 5 episodes · Buzzsprout data")}
+  ${secHTML("📱","Platform Breakdown","All episodes · Buzzsprout data")}
   <div class="card" style="display:flex;flex-direction:column;gap:10px">
-    ${apps.map(a=>`<div style="display:flex;align-items:center;gap:10px">
-      <div style="width:110px;font-size:11px;color:${C.t2};flex-shrink:0">${a.app}</div>
-      <div style="flex:1;height:8px;border-radius:4px;background:${C.border};overflow:hidden">
-        <div style="width:${a.pct}%;height:100%;background:${a.color};border-radius:4px;opacity:.85"></div>
-      </div>
-      <div style="width:60px;text-align:right;font-size:11px;font-weight:700;color:${C.t1};flex-shrink:0">${a.pct}% <span style="color:${C.t3};font-weight:400">(${a.count})</span></div>
+    ${POD_APPS.map(a=>`<div style="display:flex;align-items:center;gap:10px">
+      <div style="width:120px;font-size:11px;color:${C.t2};flex-shrink:0">${a.app}</div>
+      <div style="flex:1;height:8px;border-radius:4px;background:${C.border};overflow:hidden"><div style="width:${a.pct}%;height:100%;background:${a.color};border-radius:4px;opacity:.85"></div></div>
+      <div style="width:65px;text-align:right;font-size:11px;font-weight:700;color:${C.t1};flex-shrink:0">${a.pct}% <span style="color:${C.t3};font-weight:400">(${a.count})</span></div>
     </div>`).join("")}
   </div>
-  <div style="background:linear-gradient(135deg,${C.bgCard},${C.bgDeep});border:1px solid ${C.periwinkle}33;border-radius:12px;padding:16px 18px;margin-top:18px;display:flex;align-items:center;gap:16px">
-    <div style="font-size:32px;font-weight:800;color:${C.periwinkle};line-height:1">29</div>
-    <div>
-      <div style="font-size:12px;font-weight:700;color:${C.periwinkle};margin-bottom:3px">Buzzsprout Episode Predictor</div>
-      <div style="font-size:11px;color:${C.t2};line-height:1.6">Forecasted downloads for the next episode within its first 90 days. Consistent publishing + LinkedIn promotion can push this higher.</div>
-    </div>
-  </div>
-  ${storyHTML("Podcast — Key Takeaways","<strong style='color:"+C.green+"'>750 total downloads</strong> since launch. Apple Podcasts grew to <strong style='color:"+C.green+"'>43%</strong> of the audience. Last 7 days hit 34 downloads — the strongest recent week. Buzzsprout forecasts 29 downloads for the next episode.")}`;
+  ${storyHTML("Podcast — Key Takeaways","<strong style='color:"+C.green+"'>895 total downloads</strong> across both series — up 140 from the last update. The Age of Visibility leads all time at 290. Talk Track now has 9 episodes with consistent per-episode downloads in the 20–55 range. Apple Podcasts dominates at 50% with <strong style='color:"+C.green+"'>69% of listens on iPhone</strong> — short-form clips on LinkedIn that play directly in-feed are the best conversion path to podcast listeners.")}`;
 }
 
 function renderCharts(){
-  Object.values(charts).forEach(c=>c.destroy());
-  charts={};
-  const isDark=true;
+  Object.values(charts).forEach(c=>c.destroy()); charts={};
   const grid="rgba(42,51,98,0.8)";
   const tick={color:C.t3,font:{size:9,family:"Poppins"}};
-  const baseOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:C.bgCard,titleColor:C.green,bodyColor:C.t2,borderColor:C.border,borderWidth:1}}};
+  const base={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:C.bgCard,titleColor:C.green,bodyColor:C.t2,borderColor:C.border,borderWidth:1}}};
 
   if(platform==="linkedin"){
-    const active=getActive();
     if(period==="2025"){
       const el=document.getElementById("chart2025LI");
-      if(el){
-        charts.li2025=new Chart(el,{type:"bar",data:{labels:LI_2025.map(m=>m.m),datasets:[{label:"Posts",data:LI_2025.map(m=>m.posts),backgroundColor:C.green+"cc",borderRadius:3,yAxisID:"y"},{label:"Avg Eng %",data:LI_2025.map(m=>m.avgEng),type:"line",borderColor:C.periwinkle,backgroundColor:"transparent",borderWidth:2,pointRadius:2,yAxisID:"y1"}]},options:{...baseOpts,scales:{x:{ticks:tick,grid:{color:grid}},y:{ticks:tick,grid:{color:grid}},y1:{position:"right",ticks:{...tick,color:C.periwinkle},grid:{display:false}}}}});
-      }
+      if(el) charts.li2025=new Chart(el,{type:"bar",data:{labels:LI_2025.map(m=>m.m),datasets:[{label:"Posts",data:LI_2025.map(m=>m.posts),backgroundColor:C.green+"cc",borderRadius:3,yAxisID:"y"},{label:"Avg Eng %",data:LI_2025.map(m=>m.avgEng),type:"line",borderColor:C.periwinkle,backgroundColor:"transparent",borderWidth:2,pointRadius:2,yAxisID:"y1"}]},options:{...base,scales:{x:{ticks:tick,grid:{color:grid}},y:{ticks:tick,grid:{color:grid}},y1:{position:"right",ticks:{...tick,color:C.periwinkle},grid:{display:false}}}}});
     } else {
+      const active=getActive();
       const elLI=document.getElementById("chartLI");
       if(elLI){
-        const labels=active.map(p=>p.date.replace(/Jan |Feb |Mar /,""));
-        charts.li=new Chart(elLI,{type:"bar",data:{labels,datasets:[{label:"Impressions",data:active.map(p=>p.imp),backgroundColor:C.green+"cc",borderRadius:3,yAxisID:"y"},{label:"Eng %",data:active.map(p=>p.eng),type:"line",borderColor:C.periwinkle,backgroundColor:"transparent",borderWidth:2,pointRadius:2,yAxisID:"y1"}]},options:{...baseOpts,scales:{x:{ticks:{...tick,maxRotation:45,autoSkip:true,maxTicksLimit:period==="ytd"?15:18},grid:{color:grid}},y:{ticks:tick,grid:{color:grid}},y1:{position:"right",ticks:{...tick,color:C.periwinkle},grid:{display:false}}}}});
+        charts.li=new Chart(elLI,{type:"bar",data:{labels:active.map(p=>p.date.replace(/Jan |Feb |Mar |Apr /,"")),datasets:[{label:"Impressions",data:active.map(p=>p.imp),backgroundColor:C.green+"cc",borderRadius:3,yAxisID:"y"},{label:"Eng %",data:active.map(p=>p.eng),type:"line",borderColor:C.periwinkle,backgroundColor:"transparent",borderWidth:2,pointRadius:2,yAxisID:"y1"}]},options:{...base,scales:{x:{ticks:{...tick,maxRotation:45,autoSkip:true,maxTicksLimit:period==="ytd"?20:18},grid:{color:grid}},y:{ticks:tick,grid:{color:grid}},y1:{position:"right",ticks:{...tick,color:C.periwinkle},grid:{display:false}}}}});
       }
       const elPie=document.getElementById("chartPie");
       if(elPie){
         const counts={};
         active.forEach(p=>{counts[p.type]=(counts[p.type]||0)+1;});
         const entries=Object.entries(counts);
-        charts.pie=new Chart(elPie,{type:"doughnut",data:{labels:entries.map(([n])=>n),datasets:[{data:entries.map(([,v])=>v),backgroundColor:entries.map(([n])=>TYPE_COLORS[n]||C.blue),borderWidth:2,borderColor:C.bgCard}]},options:{...baseOpts,cutout:"55%",plugins:{legend:{display:false},tooltip:{backgroundColor:C.bgCard,titleColor:C.green,bodyColor:C.t2,borderColor:C.border,borderWidth:1}}}});
+        charts.pie=new Chart(elPie,{type:"doughnut",data:{labels:entries.map(([n])=>n),datasets:[{data:entries.map(([,v])=>v),backgroundColor:entries.map(([n])=>TYPE_COLORS[n]||C.blue),borderWidth:2,borderColor:C.bgCard}]},options:{...base,cutout:"55%"}});
       }
     }
   }
@@ -645,42 +655,27 @@ function renderCharts(){
   if(platform==="website"){
     if(period==="2025"){
       const el=document.getElementById("chart2025GA");
-      if(el){
-        charts.ga2025=new Chart(el,{type:"bar",data:{labels:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],datasets:[{label:"Sessions",data:GA_2025_SESSIONS,backgroundColor:C.green+"cc",borderRadius:3}]},options:{...baseOpts,scales:{x:{ticks:tick,grid:{color:grid}},y:{ticks:tick,grid:{color:grid}}}}});
-      }
+      if(el) charts.ga2025=new Chart(el,{type:"bar",data:{labels:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],datasets:[{label:"Sessions",data:GA_2025_SESSIONS,backgroundColor:C.green+"cc",borderRadius:3}]},options:{...base,scales:{x:{ticks:tick,grid:{color:grid}},y:{ticks:tick,grid:{color:grid}}}}});
     } else {
       const el=document.getElementById("chartGA");
       if(el){
-        let data=period==="jan"?GA_JAN:period==="feb"?GA_FEB:period==="mar"?GA_MAR:[...GA_JAN,...GA_FEB,...GA_MAR];
-        let labels=data.map((_,i)=>i+1+"");
-        if(period==="ytd"){
-          const step=Math.ceil(data.length/40);
-          data=data.filter((_,i)=>i%step===0);
-          labels=data.map((_,i)=>i*step+1+"");
-        }
-        charts.ga=new Chart(el,{type:"line",data:{labels,datasets:[{label:"Sessions",data,borderColor:C.green,backgroundColor:C.green+"22",borderWidth:2,pointRadius:0,fill:true,tension:.3}]},options:{...baseOpts,scales:{x:{ticks:{...tick,maxTicksLimit:12},grid:{color:grid}},y:{ticks:tick,grid:{color:grid},beginAtZero:true}}}});
+        let data=period==="jan"?GA_JAN:period==="feb"?GA_FEB:period==="mar"?GA_MAR:period==="apr"?GA_APR:[...GA_JAN,...GA_FEB,...GA_MAR,...GA_APR];
+        if(period==="ytd"){const step=3;data=data.filter((_,i)=>i%step===0);}
+        charts.ga=new Chart(el,{type:"line",data:{labels:data.map((_,i)=>i+1+""),datasets:[{label:"Sessions",data,borderColor:C.green,backgroundColor:C.green+"22",borderWidth:2,pointRadius:0,fill:true,tension:.3}]},options:{...base,scales:{x:{ticks:{...tick,maxTicksLimit:15},grid:{color:grid}},y:{ticks:tick,grid:{color:grid},beginAtZero:true}}}});
       }
     }
   }
 
   if(platform==="podcast"){
     const el=document.getElementById("chartPod");
-    if(el){
-      charts.pod=new Chart(el,{type:"line",data:{labels:POD_TREND_LABELS,datasets:[{label:"Downloads",data:POD_TREND,borderColor:C.green,backgroundColor:C.green+"22",borderWidth:2,pointRadius:3,fill:true,tension:.3}]},options:{...baseOpts,scales:{x:{ticks:{...tick,maxRotation:45,autoSkip:false},grid:{color:grid}},y:{ticks:tick,grid:{color:grid},beginAtZero:true}}}});
-    }
+    if(el) charts.pod=new Chart(el,{type:"line",data:{labels:POD_TREND_LABELS,datasets:[{label:"Downloads",data:POD_TREND,borderColor:C.green,backgroundColor:C.green+"22",borderWidth:2,pointRadius:3,fill:true,tension:.3}]},options:{...base,scales:{x:{ticks:{...tick,maxRotation:45,autoSkip:false},grid:{color:grid}},y:{ticks:tick,grid:{color:grid},beginAtZero:true}}}});
   }
 }
 
 function attachListeners(){
-  document.querySelectorAll("[data-tab]").forEach(btn=>{
-    btn.addEventListener("click",()=>{platform=btn.dataset.tab;renderApp();});
-  });
-  document.querySelectorAll("[data-period]").forEach(btn=>{
-    btn.addEventListener("click",()=>{period=btn.dataset.period;renderApp();});
-  });
-  document.querySelectorAll("[data-pod]").forEach(btn=>{
-    btn.addEventListener("click",()=>{podSeries=btn.dataset.pod;renderApp();});
-  });
+  document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{platform=b.dataset.tab;renderApp();}));
+  document.querySelectorAll("[data-period]").forEach(b=>b.addEventListener("click",()=>{period=b.dataset.period;renderApp();}));
+  document.querySelectorAll("[data-pod]").forEach(b=>b.addEventListener("click",()=>{podSeries=b.dataset.pod;renderApp();}));
 }
 
 renderApp();
