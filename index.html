@@ -41,7 +41,7 @@ button:focus{outline:none}
 <body>
 <div id="app"></div>
 <script>
-const LAST_UPDATED = "July 16, 2026";
+const LAST_UPDATED = "August 28, 2026";
 const C = {
   green:"#34FFA4", greenDim:"rgba(52,255,164,0.12)", greenMuted:"rgba(52,255,164,0.5)",
   periwinkle:"#C2D8FF", periwinkleDim:"rgba(194,216,255,0.12)",
@@ -179,6 +179,26 @@ const LI_JUN=[
   {date:"Jun 28",title:"Telematics Transition — Part 1 Blog",type:"Link",imp:538,eng:6.32,likes:6,clicks:27},
   {date:"Jun 29",title:"Madeline Really Needs a Railcar",type:"Video",imp:561,eng:11.04,likes:9,clicks:52},
 ];
+const LI_JUL=[
+  {date:"Jul 1", title:"Railroading Transition to Telematics Part 2",type:"Link",imp:668,eng:7.93,likes:12,clicks:37},
+  {date:"Jul 2", title:"Where's Waldo: Track Charlie",type:"Graphic",imp:647,eng:7.88,likes:8,clicks:39},
+  {date:"Jul 3", title:"Track Charlie Results",type:"Graphic",imp:236,eng:1.27,likes:2,clicks:1},
+  {date:"Jul 7", title:"Heading to MARS — Golf Announcement",type:"Graphic",imp:261,eng:16.48,likes:6,clicks:32},
+  {date:"Jul 8", title:"Energy-Savvy Freight Shipping — Trains + Barges",type:"Link",imp:447,eng:5.59,likes:7,clicks:16},
+  {date:"Jul 9", title:"Triathlon Announcement",type:"Graphic",imp:1379,eng:20.16,likes:32,clicks:232},
+  {date:"Jul 13",title:"Telegraph Announces Trestle",type:"Link",imp:927,eng:9.71,likes:26,clicks:54},
+  {date:"Jul 14",title:"Day One at MARS Photos",type:"Picture",imp:2252,eng:60.48,likes:34,clicks:1321},
+  {date:"Jul 16",title:"Freight Cycles Explained",type:"Link",imp:695,eng:4.03,likes:5,clicks:18},
+  {date:"Jul 17",title:"Talk Track — Be a Goldfish Clip",type:"Video",imp:417,eng:9.35,likes:9,clicks:29},
+  {date:"Jul 20",title:"Talk Track Clip w/ Angie",type:"Video",imp:345,eng:5.51,likes:6,clicks:13},
+  {date:"Jul 21",title:"Day in the Life: Freight Rail Conference",type:"Graphic",imp:651,eng:48.08,likes:11,clicks:296},
+  {date:"Jul 24",title:"Chicago Summer Office Photo",type:"Picture",imp:2739,eng:10.62,likes:58,clicks:228},
+  {date:"Jul 27",title:"Merger Updates + Earnings Calls + Chicago TT",type:"Link",imp:554,eng:3.07,likes:17,clicks:10},
+  {date:"Jul 28",title:"Building for the Long Term — Values Video",type:"Video",imp:538,eng:12.08,likes:14,clicks:47},
+  {date:"Jul 29",title:"UP/NS Merger — What CN Thinks",type:"Video",imp:456,eng:9.65,likes:14,clicks:30},
+  {date:"Jul 30",title:"Pricing Carousel Infographic",type:"Graphic",imp:509,eng:42.83,likes:23,clicks:193},
+  {date:"Jul 31",title:"Adoption of Rail Tech Graphic",type:"Graphic",imp:483,eng:7.87,likes:17,clicks:20},
+];
 const LI_2025=[
   {m:"Jan",posts:9,avgEng:27.2,reactions:302,clicks:222,followers:27},
   {m:"Feb",posts:5,avgEng:14.6,reactions:152,clicks:445,followers:24},
@@ -200,74 +220,74 @@ const GA_FEB=[52,108,116,106,95,83,53,73,109,125,96,107,109,80,79,89,93,114,101,
 const GA_MAR=[159,260,226,228,241,176,86,53,125,139,95,72,100,33,45,92,79,64,71,61,32,39,72,81,58,79,73,34,26,80,87];
 // April estimated from GA4 chart — spike Apr 19-21 from Market Consist post
 const GA_APR=[85,90,95,100,88,75,52,60,95,105,88,80,90,35,95,90,100,92,285,310,270,180,155,160,95,80,245,165,200,175];
+// May daily sessions, read from Madi's GA4 chart screenshot — peak day 9 (~175, OpenTug-adjacent),
+// 2nd peak day 26 (~160, OpenTug PR). Totals to 2,577 (matches the "2,578 total / 83 avg daily" on the chart).
+const GA_MAY=[47,59,55,63,50,63,42,71,175,113,104,89,80,71,124,128,116,97,84,76,63,51,67,63,79,160,96,89,80,71,51];
 const GA_2025_SESSIONS=[1706,1495,3631,2101,1828,2282,2042,2251,1802,2392,2524,2538];
 const GA_26_MO=[
   {m:"Jan",users:3192,sessions:3727,pv:4689},
   {m:"Feb",users:2657,sessions:3137,pv:4022},
   {m:"Mar",users:2160,sessions:2076,pv:3538},
   {m:"Apr",users:3100,sessions:3581,pv:4800},
-  // May + June derived by subtracting Jan–Apr from the Jan1–Jul1 YTD totals (15K users /
-  // 19K sessions / 26K views) and the standalone June 1–Jul 1 pull (1.9K users / 3.1K views /
-  // 2,352 sessions from channel breakdown). GA4's UI rounds to 1-2 sig figs, so treat these
-  // as close estimates — pull clean custom "May 1–31" + "Jun 1–30" reports to firm up exact numbers.
-  {m:"May",users:1991,sessions:4127,pv:5851},
+  {m:"May",users:1991,sessions:2577,pv:5851},
   {m:"Jun",users:1900,sessions:2352,pv:3100},
+  {m:"Jul",users:1891,sessions:2293,pv:3407},
 ];
 const GA_25_MO=[
   {m:"Jan",users:1359,sessions:1706},{m:"Feb",users:1224,sessions:1495},
   {m:"Mar",users:2996,sessions:3631},{m:"Apr",users:1543,sessions:2101},
   {m:"May",users:1435,sessions:1828,pv:2675},{m:"Jun",users:1868,sessions:2282,pv:3711},
+  {m:"Jul",users:1695,sessions:2042,pv:3298},
 ];
 
 // ── PODCAST DATA ──
-const POD_ALLTIME=895;
-const POD_LAST7=10, POD_LAST30=24, POD_LAST90=99;
-// NOTE(Madi): the figures above are the legacy combined "Don't Dwell On It" Buzzsprout
-// account (id 2441104) — effectively DDOT-only going forward since Talk Track now has
-// its own account below. Still need a fresh DDOT-only all-time/7/30/90 pull to replace these.
+// Refreshed from Buzzsprout overview/agent/locations exports pulled Aug 28, 2026.
+// DDOT figures below are DDOT-only, filtered out of the legacy combined account
+// (which still shows some pre-split Talk Track episode history alongside it).
+const POD_ALLTIME=705, POD_LAST7=15, POD_LAST30=43, POD_LAST90=131;
 
-// Talk Track's own account (id 2616056) — split off recently, so its all-time total
-// only reflects downloads since the split, not TT's full history.
-const TT_ALLTIME=51, TT_LAST7=6, TT_LAST30=8, TT_LAST90=51, TT_PREDICTED=32;
+// Talk Track's standalone account (split off in May) — all-time reflects downloads
+// since the split only, not the show's full history (that legacy total, 298 downloads,
+// still lives on the old combined account under its original episode entries).
+const TT_ALLTIME=111, TT_LAST7=2, TT_LAST30=46, TT_LAST90=90;
 const TT_APPS=[
-  {app:"Apple Podcasts",         pct:53, count:19, color:"#FC3C44"},
-  {app:"Spotify",                pct:14, count:5,  color:"#1DB954"},
-  {app:"Buzzsprout Embed Player",pct:11, count:4,  color:"#f59e0b"},
-  {app:"Pocket Casts",           pct:8,  count:3,  color:"#F43E37"},
-  {app:"Unknown",                pct:6,  count:2,  color:"#5C6370"},
+  {app:"Apple Podcasts",         pct:44, count:49, color:"#FC3C44"},
+  {app:"Web Browser",            pct:16, count:18, color:"#6C9CFC"},
+  {app:"Spotify",                pct:12, count:13, color:"#1DB954"},
+  {app:"Buzzsprout Embed Player",pct:9,  count:10, color:"#f59e0b"},
+  {app:"Pocket Casts",           pct:5,  count:6,  color:"#F43E37"},
+  {app:"Other",                  pct:14, count:15, color:"#5C6370"},
 ];
 const POD_APPS=[
-  {app:"Apple Podcasts",pct:50,count:427,color:"#FC3C44"},
-  {app:"Web Browser",   pct:16,count:143,color:"#6C9CFC"},
-  {app:"Spotify",       pct:16,count:141,color:"#1DB954"},
-  {app:"Buzzsprout",    pct:6, count:51, color:"#f59e0b"},
-  {app:"Pocket Casts",  pct:2, count:19, color:"#F43E37"},
-  {app:"Other",         pct:10,count:114,color:"#5C6370"},
+  {app:"Apple Podcasts",         pct:50,count:500,color:"#FC3C44"},
+  {app:"Web Browser",            pct:17,count:168,color:"#6C9CFC"},
+  {app:"Spotify",                pct:16,count:160,color:"#1DB954"},
+  {app:"Buzzsprout Embed Player",pct:6, count:56, color:"#f59e0b"},
+  {app:"Podcast Addict",         pct:3, count:28, color:"#00BFFF"},
+  {app:"Pocket Casts",           pct:2, count:22, color:"#F43E37"},
+  {app:"Other",                  pct:7, count:68, color:"#5C6370"},
 ];
 const DDOT_EPS=[
-  {title:"The Age of Visibility",       dl:295,date:"Jun '25"},
-  {title:"Don't Dwell On It: Prototype",dl:63, date:"Jan '25"},
-  {title:"Much Ado About Shipping",     dl:48, date:"Aug '25"},
-  {title:"The Tell-Tale Yard",          dl:36, date:"Oct '25"},
-  {title:"The Fast + the Cautious",     dl:36, date:"Mar '26"},
-  {title:"Rail in the Time of AI",      dl:34, date:"Dec '25"},
-  {title:"From RACS to Rail Leasing",   dl:33, date:"Jun '26"},
-  {title:"The Little Bet Club",         dl:33, date:"Feb '26"},
-  {title:"(Rail)Car Talk",              dl:30, date:"Jun '26"},
-  {title:"As the Rail Turns",           dl:25, date:"Jan '26"},
-  {title:"Lessor is More",              dl:20, date:"May '26"},
+  {title:"The Age of Visibility",              dl:296,date:"Jun '25"},
+  {title:"Don't Dwell On It: Prototype",       dl:63, date:"Jan '25"},
+  {title:"Much Ado About Shipping",            dl:49, date:"Aug '25"},
+  {title:"(Rail)Car Talk",                     dl:38, date:"Jun '26"},
+  {title:"The Fast + the Cautious",            dl:38, date:"Mar '26"},
+  {title:"From RACS to Rail Leasing",          dl:37, date:"Jun '26"},
+  {title:"The Tell-Tale Yard",                 dl:37, date:"Oct '25"},
+  {title:"Rail in the Time of AI",             dl:35, date:"Dec '25"},
+  {title:"The Little Bet Club",                dl:35, date:"Feb '26"},
+  {title:"Lessor is More",                     dl:31, date:"May '26"},
+  {title:"As the Rail Turns",                  dl:25, date:"Jan '26"},
+  {title:"The Long + the Short of It",         dl:21, date:"Aug '26"},
 ];
 const TT_EPS=[
-  {title:"STB Greenlights UPNS Merger Application…With Conditions",dl:11,date:"Jun '26"},
-  {title:"Union Pacific + Norfolk Southern Merger Filing",         dl:10,date:"Jun '26"},
-  {title:"Cloudy with a Chance of Carloads",                       dl:7, date:"Apr '26"},
-  {title:"Freight Cycles Explained: Why Markets Turn",             dl:6, date:"2026"},
-  {title:"A Tale of Two Railroads",                                dl:3, date:"Aug '25"},
+  {title:"Reading the Revised UP-NS Filing",              dl:18,date:"Aug '26"},
+  {title:"Freight Cycles Explained",                      dl:15,date:"Jul '26"},
+  {title:"STB Greenlights UPNS Merger Application",       dl:13,date:"Jun '26"},
+  {title:"Freight vs Fiction",                            dl:12,date:"Aug '26"},
+  {title:"Union Pacific + Norfolk Southern Merger Filing",dl:12,date:"May '26"},
 ];
-// NOTE(Madi): these come from the new standalone Talk Track account and only show its
-// top 5 all-time episodes. Older Talk Track episodes (Pride + Intermodal, Gone With The
-// Freight, etc.) still have their historical downloads on the legacy combined account —
-// send the full "See All Episodes" list from the new account when you have it and I'll merge.
 const POD_TREND_LABELS=["Jan '25","Feb '25","Mar '25","Apr '25","May '25","Jun '25","Jul '25","Aug '25","Sep '25","Oct '25","Nov '25","Dec '25","Jan '26","Feb '26","Mar '26","Apr '26"];
 const POD_TREND=[58,4,4,4,65,55,10,82,83,62,100,92,85,30,34,14];
 
@@ -286,7 +306,8 @@ function getPosts(){
   if(period==="apr") return LI_APR;
   if(period==="may") return LI_MAY;
   if(period==="jun") return LI_JUN;
-  return [...LI_JAN,...LI_FEB,...LI_MAR,...LI_APR,...LI_MAY,...LI_JUN];
+  if(period==="jul") return LI_JUL;
+  return [...LI_JAN,...LI_FEB,...LI_MAR,...LI_APR,...LI_MAY,...LI_JUN,...LI_JUL];
 }
 function getActive(){return getPosts().filter(p=>p.eng>0);}
 
@@ -297,17 +318,16 @@ function pLabel(){
   if(period==="apr") return "April 2026";
   if(period==="may") return "May 2026";
   if(period==="jun") return "June 2026";
+  if(period==="jul") return "July 2026";
   if(period==="2025") return "2025 Full Year";
-  return "Jan–Jun 2026 YTD";
+  return "Jan–Jul 2026 YTD";
 }
 
 function liStats(){
   const active=getActive();
-  // TODO(Madi): May follower gain/total + June total followers are still pending —
-  // June's new-follower count (41) is in, but I need May's gain (and a running total)
-  // to back into June's total followers.
-  const followers={jan:98,feb:22,mar:15,apr:45,may:null,jun:41,ytd:null};
-  const totalFollowers={jan:2335,feb:2357,mar:2372,apr:2417,may:null,jun:null,ytd:null};
+  // Confirmed from Madi's LinkedIn follower growth tracker (Dec '25 → Jul '26).
+  const followers={jan:98,feb:22,mar:15,apr:45,may:76,jun:42,jul:41,ytd:339};
+  const totalFollowers={jan:2335,feb:2357,mar:2372,apr:2417,may:2493,jun:2535,jul:2576,ytd:2576};
   return {
     posts:getPosts().length,
     imp:sumK(active,"imp"),
@@ -326,6 +346,7 @@ function gaStats(){
   if(period==="apr") return GA_26_MO[3];
   if(period==="may") return GA_26_MO[4];
   if(period==="jun") return GA_26_MO[5];
+  if(period==="jul") return GA_26_MO[6];
   return {
     users:GA_26_MO.reduce((s,m)=>s+m.users,0),
     sessions:GA_26_MO.reduce((s,m)=>s+m.sessions,0),
@@ -399,6 +420,7 @@ function buildPills(){
     <button class="pill ${period==="apr"?"active":""}" data-period="apr">April</button>
     <button class="pill ${period==="may"?"active":""}" data-period="may">May</button>
     <button class="pill ${period==="jun"?"active":""}" data-period="jun">June</button>
+    <button class="pill ${period==="jul"?"active":""}" data-period="jul">July</button>
     <button class="pill ${period==="2025"?"active":""}" data-period="2025">2025 Full Year</button>
   </div>`;
 }
@@ -477,7 +499,7 @@ function buildLinkedin(){
     </div>`;
   }).join("");
 
-  const prevEng={jan:"vs 27.2% Jan '25",feb:"vs 14.6% Feb '25",mar:"vs 17.6% Mar '25",apr:"vs 13.0% Apr '25",may:"2026",jun:"2026",ytd:"Jan–Jun 2026"};
+  const prevEng={jan:"vs 27.2% Jan '25",feb:"vs 14.6% Feb '25",mar:"vs 17.6% Mar '25",apr:"vs 13.0% Apr '25",may:"2026",jun:"2026",jul:"vs 16.4% Jul '25",ytd:"Jan–Jul 2026"};
   const stories={
     jan:`January was headlined by <strong style="color:${C.green}">AITX Partnership</strong> (1,240 imp, 47 reactions) + <strong style="color:${C.green}">Charlie at MARS</strong> (1,482 imp, 17.6% eng). Market Consist PDF hit 34% engagement with 110 clicks. Closed with +98 new followers.`,
     feb:`<strong style="color:${C.green}">Day in the Life: Caleb dominated</strong> with 77.8% engagement + 614 clicks. Valentine's content averaged 37% combined. The Railroads Friends blog sparked a late-month website surge. 18 posts = 3.6x February 2025 cadence.`,
@@ -485,12 +507,13 @@ function buildLinkedin(){
     apr:`April's standout was the <strong style="color:${C.green}">Demurrage Infographic Carousel</strong> at 66.7% engagement + 195 clicks — the highest click post of the month. Harris Hot Takes on Earnings Call (16.6%) + Consist Takeaways Carousel (29.8%) showed industry analysis content resonating strongly. 21 posts vs. 6 in April 2025 — a 3.5x cadence increase.`,
     may:`May's biggest driver was the <strong style="color:${C.green}">Open Tug press release</strong> (1,394 imp, 44 reactions) — the month's widest-reaching post. STB Guide for Shippers (33% eng) + Infographic: Barge + Rail (36.8% eng, 164 clicks) showed carousels and guides converting well. Charlie's Favorite Train Facts (24.2% eng) kept the mascot content pillar going.`,
     jun:`June's standout was <strong style="color:${C.green}">Day in the Life of TA</strong> — 81% engagement, the highest of any post this year. The DDOT Erica Ray announcement led on reach (1,397 imp). One Year DDOT Blooper Reel (12.7% eng) marked the podcast's anniversary. Rail ETA Carousel hit 43.8% eng — another strong showing for the carousel format.`,
-    ytd:`<strong style="color:${C.green}">${s.posts} posts in Jan–Jun 2026</strong> — cadence has stayed well above 2025's pace. The content formula is consistent: <strong style="color:${C.green}">team photos + infographics + industry analysis</strong>. Follower growth for May + June is still pending from Windsor.ai — once that's in, this section will update automatically.`,
+    jul:`July's top two posts were both people-first, behind-the-scenes content: <strong style="color:${C.green}">Day One at MARS Photos</strong> (60.5% eng, 2,252 imp, 1,321 clicks) and <strong style="color:${C.green}">Day in the Life: Freight Rail Conference</strong> (48.1% eng, 296 clicks) — the conference week clearly resonated. Pricing Carousel Infographic (42.8% eng) kept the carousel format's streak alive. Merger/news recap posts underperformed (3–10% eng), reinforcing that narrative + visual framing beats straight recaps.`,
+    ytd:`<strong style="color:${C.green}">${s.posts} posts in Jan–Jul 2026</strong> — cadence has stayed well above 2025's pace all year. The content formula is consistent: <strong style="color:${C.green}">team photos + infographics + industry analysis</strong>. Followers have grown from 2,278 to 2,576 (+298, +13%) since the start of the year — a steady climb every single month, no dips.`,
   };
 
   return `<div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">${pl} · LinkedIn</span></div>
   <div class="kpi-grid">
-    ${kpi("Total Posts",s.posts,period==="ytd"?"Jan–Apr 2026":pLabel())}
+    ${kpi("Total Posts",s.posts,period==="ytd"?"Jan–Jul 2026":pLabel())}
     ${kpi("Total Impressions",fmt(s.imp),Math.round(s.imp/s.posts).toLocaleString()+" avg per post")}
     ${kpi("Avg Engagement",s.eng+"%",prevEng[period]||"2026")}
     ${kpi("Total Clicks",fmt(s.clicks),Math.round(s.clicks/s.posts)+" avg per post")}
@@ -538,8 +561,9 @@ function buildWebsite(){
     feb:{cur:[2657,3137,4022],prev:[1224,1495,2383],label:"Feb"},
     mar:{cur:[2160,2076,3538],prev:[2996,3631,5475],label:"Mar"},
     apr:{cur:[3100,3581,4800],prev:[1543,2101,3309],label:"Apr"},
-    may:{cur:[1991,4127,5851],prev:[1435,1828,2675],label:"May"},
+    may:{cur:[1991,2577,5851],prev:[1435,1828,2675],label:"May"},
     jun:{cur:[1900,2352,3100],prev:[1868,2282,3711],label:"Jun"},
+    jul:{cur:[1891,2293,3407],prev:[1695,2042,3298],label:"Jul"},
   };
   const yoy=yoyMap[period];
   const yoyCards=yoy?["Users","Sessions","Page Views"].map((l,i)=>{
@@ -558,20 +582,21 @@ function buildWebsite(){
     feb:`Late-month surge <strong style="color:${C.green}">(Feb 24–28)</strong> driven by the Railroads Friends merger blog — the site's #2 most visited page. Users more than doubled YoY.`,
     mar:`March opened strong with a <strong style="color:${C.green}">spike in the first week</strong> tied to Employee Appreciation + Talk Track content. Users down vs. March 2025 — that month was an outlier boosted by major partnership announcements.`,
     apr:`April's <strong style="color:${C.green}">biggest spike hit April 19–21</strong> tied to the Q2 Market Consist post (658 impressions, strong click-through). Users doubled YoY (3,100 vs. 1,543) — the strongest month-over-month recovery of the quarter. Direct traffic dominated at 70% but Organic Social had the highest session quality at 53% engagement rate.`,
-    may:`May's numbers are estimated from the YTD rollup (GA4 didn't give us a clean May-only pull) but point to the strongest session count of the year so far — likely riding the Open Tug press release + Demurrage launch. Users up YoY (~1,991 vs. 1,435).`,
+    may:`May's <strong style="color:${C.green}">peak day was May 9</strong> (~175 sessions), with a second spike on <strong style="color:${C.green}">May 26</strong> (~160 sessions) tied to the Open Tug PR — plus a smaller run-up May 15-16 (~150s) around the Telegraph Demurrage launch. 2,577 sessions for the month, averaging 83/day. Users up YoY (~1,991 vs. 1,435).`,
     jun:`June brought <strong style="color:${C.green}">1.9K users</strong> and 3.1K page views, with Home–Telegraph as the clear top page (1.7K views). Engaged sessions per active user (0.43) and avg engagement time (19s) both ran ahead of the Jan–Jun average — a sign traffic quality held up even as the DDOT Erica Ray episodes drove volume. Users about flat YoY (1,900 vs. 1,868).`,
-    ytd:`<strong style="color:${C.green}">~15K users + 19K sessions in Jan–Jun 2026</strong> — up significantly vs. same period 2025. LinkedIn remains the primary traffic spike driver. Organic Social traffic delivers the highest quality visits per session.`,
+    jul:`July's traffic was <strong style="color:${C.green}">homepage-heavy</strong> — 1,754 of 3,407 total page views (51%) landed on the homepage alone. The July 15/26 Talk Track episode pages and the Trestle + Triathlon announcement pages picked up modest but real traffic. Watch out: Singapore, Ashburn, and Boardman show up as top "cities" in the raw geo data — all three are cloud/datacenter hubs, so July's 1,891 users figure likely carries some bot inflation, similar to the Q1 pattern already flagged elsewhere in this dashboard. Users essentially flat YoY (1,891 vs. 1,695, +12%).`,
+    ytd:`<strong style="color:${C.green}">~17K users + 20K sessions in Jan–Jul 2026</strong> — up significantly vs. same period 2025. LinkedIn remains the primary traffic spike driver. Organic Social traffic delivers the highest quality visits per session.`,
   };
 
   return `<div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">${pl} · Website</span></div>
   <div class="kpi-grid">
-    ${kpi("Active Users",fmt(g.users),period==="ytd"?"Jan–Jun 2026 total":pl)}
-    ${kpi("Sessions",fmt(g.sessions),period==="ytd"?"Jan–Jun 2026 total":pl)}
-    ${kpi("Page Views",fmt(g.pv),period==="ytd"?"Jan–Jun 2026 total":pl)}
+    ${kpi("Active Users",fmt(g.users),period==="ytd"?"Jan–Jul 2026 total":pl)}
+    ${kpi("Sessions",fmt(g.sessions),period==="ytd"?"Jan–Jul 2026 total":pl)}
+    ${kpi("Page Views",fmt(g.pv),period==="ytd"?"Jan–Jul 2026 total":pl)}
   </div>
   ${yoy?`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">${yoyCards}</div>`:""}
   ${secHTML("📈","Daily Traffic","Sessions by day")}
-  ${["may","jun"].includes(period)
+  ${["jun","jul"].includes(period)
     ? `<div class="card" style="font-size:11px;color:${C.t3};text-align:center;padding:30px 16px">Daily breakdown isn't in yet for ${pl} — GA4 only gave us the monthly rollup. Pull a daily custom report for this month and I'll chart it.</div>`
     : `<div class="card"><canvas id="chartGA"></canvas></div>`}
   ${period!=="ytd"?buildAudienceInsights():""}
@@ -674,7 +699,7 @@ function buildPodcast(){
 
   return `<div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">Don't Dwell On It · All Time</span></div>
   <div class="kpi-grid">
-    ${kpi("All-Time Downloads",fmt(POD_ALLTIME),"Since launch (legacy account)")}
+    ${kpi("All-Time Downloads",fmt(POD_ALLTIME),"Since launch (DDOT-only)")}
     ${kpi("Last 30 Days",POD_LAST30,"Downloads")}
     ${kpi("Last 90 Days",POD_LAST90,"Downloads")}
     ${kpi("Last 7 Days",POD_LAST7,"Downloads")}
@@ -693,15 +718,15 @@ function buildPodcast(){
   </div>
   ${secHTML("📈","Monthly Download Trend","Jan 2025 to Apr 2026")}
   <div class="card"><canvas id="chartPod"></canvas></div>
-  ${secHTML("🎙","Talk Track — Standalone Account","New Buzzsprout account · numbers reflect downloads since the split, not full show history")}
+  ${secHTML("🎙","Talk Track — Standalone Account","New Buzzsprout account · numbers reflect downloads since the May split, not full show history")}
   <div class="kpi-grid">
     ${kpi("All-Time Downloads",fmt(TT_ALLTIME),"Since account split")}
     ${kpi("Last 30 Days",TT_LAST30,"Downloads")}
+    ${kpi("Last 90 Days",TT_LAST90,"Downloads")}
     ${kpi("Last 7 Days",TT_LAST7,"Downloads")}
-    ${kpi("Next Ep Forecast",TT_PREDICTED,"Buzzsprout prediction")}
   </div>
   <div class="card" style="margin-bottom:8px">
-    <div class="kpi-label" style="margin-bottom:10px">Talk Track — Platform Breakdown (Last 5 Episodes)</div>
+    <div class="kpi-label" style="margin-bottom:10px">Talk Track — Platform Breakdown</div>
     <div style="display:flex;flex-direction:column;gap:10px">
       ${TT_APPS.map(a=>`<div style="display:flex;align-items:center;gap:10px">
         <div style="width:150px;font-size:11px;color:${C.t2};flex-shrink:0">${a.app}</div>
@@ -722,15 +747,15 @@ function buildPodcast(){
   ${(podSeries==="all"||podSeries==="talktrack")?`
     ${podSeries==="all"?`<div style="font-size:11px;font-weight:700;color:${C.periwinkle};margin-bottom:8px;letter-spacing:.5px">TALK TRACK</div>`:""}
     ${epRows(TT_EPS,C.periwinkle)}`:""}
-  ${secHTML("📱","Platform Breakdown","All episodes · Buzzsprout data")}
+  ${secHTML("📱","Platform Breakdown","DDOT all episodes · Buzzsprout data")}
   <div class="card" style="display:flex;flex-direction:column;gap:10px">
     ${POD_APPS.map(a=>`<div style="display:flex;align-items:center;gap:10px">
-      <div style="width:120px;font-size:11px;color:${C.t2};flex-shrink:0">${a.app}</div>
+      <div style="width:150px;font-size:11px;color:${C.t2};flex-shrink:0">${a.app}</div>
       <div style="flex:1;height:8px;border-radius:4px;background:${C.border};overflow:hidden"><div style="width:${a.pct}%;height:100%;background:${a.color};border-radius:4px;opacity:.85"></div></div>
       <div style="width:65px;text-align:right;font-size:11px;font-weight:700;color:${C.t1};flex-shrink:0">${a.pct}% <span style="color:${C.t3};font-weight:400">(${a.count})</span></div>
     </div>`).join("")}
   </div>
-  ${storyHTML("Podcast — Key Takeaways","Talk Track now has its own Buzzsprout account, tracking <strong style='color:"+C.green+"'>51 downloads</strong> since the split — led by the STB/UP+NS merger coverage (11 + 10 downloads), which suggests regulatory news episodes are resonating. Don't Dwell On It's legacy combined-account totals (895 downloads, updated through April) still need a fresh pull now that Talk Track has split off. The Age of Visibility remains DDOT's runaway leader at 295 downloads. Apple Podcasts dominates both shows, with Talk Track skewing even higher (53% Apple vs. DDOT's 50%).")}`;
+  ${storyHTML("Podcast — Key Takeaways","Don't Dwell On It sits at <strong style='color:"+C.green+"'>705 all-time downloads</strong> (DDOT-only, now cleanly separated from Talk Track's history). Talk Track's new standalone account has racked up <strong style='color:"+C.green+"'>111 downloads since the May split</strong>, led by merger/regulatory coverage — Reading the Revised UP-NS Filing (18), Freight Cycles Explained (15), and the STB Greenlights UPNS Merger episode (13) are its top 3. The Age of Visibility remains DDOT's runaway all-time leader at 296 downloads. July/August merger-news episodes are clearly Talk Track's strongest content lane right now.")}`;
 }
 
 function renderCharts(){
@@ -747,7 +772,7 @@ function renderCharts(){
       const active=getActive();
       const elLI=document.getElementById("chartLI");
       if(elLI){
-        charts.li=new Chart(elLI,{type:"bar",data:{labels:active.map(p=>p.date.replace(/Jan |Feb |Mar |Apr /,"")),datasets:[{label:"Impressions",data:active.map(p=>p.imp),backgroundColor:C.green+"cc",borderRadius:3,yAxisID:"y"},{label:"Eng %",data:active.map(p=>p.eng),type:"line",borderColor:C.periwinkle,backgroundColor:"transparent",borderWidth:2,pointRadius:2,yAxisID:"y1"}]},options:{...base,scales:{x:{ticks:{...tick,maxRotation:45,autoSkip:true,maxTicksLimit:period==="ytd"?20:18},grid:{color:grid}},y:{ticks:tick,grid:{color:grid}},y1:{position:"right",ticks:{...tick,color:C.periwinkle},grid:{display:false}}}}});
+        charts.li=new Chart(elLI,{type:"bar",data:{labels:active.map(p=>p.date.replace(/Jan |Feb |Mar |Apr |May |Jun |Jul /,"")),datasets:[{label:"Impressions",data:active.map(p=>p.imp),backgroundColor:C.green+"cc",borderRadius:3,yAxisID:"y"},{label:"Eng %",data:active.map(p=>p.eng),type:"line",borderColor:C.periwinkle,backgroundColor:"transparent",borderWidth:2,pointRadius:2,yAxisID:"y1"}]},options:{...base,scales:{x:{ticks:{...tick,maxRotation:45,autoSkip:true,maxTicksLimit:period==="ytd"?20:18},grid:{color:grid}},y:{ticks:tick,grid:{color:grid}},y1:{position:"right",ticks:{...tick,color:C.periwinkle},grid:{display:false}}}}});
       }
       const elPie=document.getElementById("chartPie");
       if(elPie){
@@ -763,10 +788,10 @@ function renderCharts(){
     if(period==="2025"){
       const el=document.getElementById("chart2025GA");
       if(el) charts.ga2025=new Chart(el,{type:"bar",data:{labels:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],datasets:[{label:"Sessions",data:GA_2025_SESSIONS,backgroundColor:C.green+"cc",borderRadius:3}]},options:{...base,scales:{x:{ticks:tick,grid:{color:grid}},y:{ticks:tick,grid:{color:grid}}}}});
-    } else {
+    } else if(period!=="jul"){
       const el=document.getElementById("chartGA");
       if(el){
-        let data=period==="jan"?GA_JAN:period==="feb"?GA_FEB:period==="mar"?GA_MAR:period==="apr"?GA_APR:[...GA_JAN,...GA_FEB,...GA_MAR,...GA_APR];
+        let data=period==="jan"?GA_JAN:period==="feb"?GA_FEB:period==="mar"?GA_MAR:period==="apr"?GA_APR:period==="may"?GA_MAY:[...GA_JAN,...GA_FEB,...GA_MAR,...GA_APR,...GA_MAY];
         if(period==="ytd"){const step=3;data=data.filter((_,i)=>i%step===0);}
         charts.ga=new Chart(el,{type:"line",data:{labels:data.map((_,i)=>i+1+""),datasets:[{label:"Sessions",data,borderColor:C.green,backgroundColor:C.green+"22",borderWidth:2,pointRadius:0,fill:true,tension:.3}]},options:{...base,scales:{x:{ticks:{...tick,maxTicksLimit:15},grid:{color:grid}},y:{ticks:tick,grid:{color:grid},beginAtZero:true}}}});
       }
