@@ -321,12 +321,58 @@ const TT_EPS=[
 const POD_TREND_LABELS=["Jan '25","Feb '25","Mar '25","Apr '25","May '25","Jun '25","Jul '25","Aug '25","Sep '25","Oct '25","Nov '25","Dec '25","Jan '26","Feb '26","Mar '26","Apr '26"];
 const POD_TREND=[58,4,4,4,65,55,10,82,83,62,100,92,85,30,34,14];
 
+// ── THE CONSIST (quarterly content report) ──
+// Pulled from Madi's Consist Metrics tracker, Sep 17, 2026. Four editions published to date.
+// Website Traffic figures are measured in the two weeks following each edition's Link Post.
+const CONSIST_EDITIONS=[
+  {
+    id:"q4-2025", label:"1st Edition", quarter:"Q4 2025", published:"Sep 30, 2025",
+    linkPost:{impSponsored:13778,impOrganic:633,clicksSponsored:1125,clicksOrganic:381,engAll:8.6,engOrganic:60.2},
+    ttPost:{published:"Oct 2, 2025",imp:636,clicks:29,eng:4.6},
+    carousel:{published:"Oct 8, 2025",imp:903,clicks:362,eng:40.1},
+    ad:null,
+    email:null,
+    website:{sessions:1113,landingViews:13,landingPct:1.17,downloads:10},
+    talkTrack:{title:"Gone with the Freight",downloads:33,updatedDownloads:3,videoViews:15,webpageVisits:13},
+  },
+  {
+    id:"q1-2026", label:"2nd Edition", quarter:"Q1 2026", published:"Jan 29, 2026",
+    linkPost:{impSponsored:12362,impOrganic:623,clicksSponsored:1155,clicksOrganic:149,engAll:9.8,engOrganic:23.9},
+    ttPost:{published:"Feb 2, 2026",impSponsored:7400,impOrganic:670,clicksSponsored:48,clicksOrganic:25,engAll:0.7,engOrganic:3.7},
+    carousel:{published:"Feb 3, 2026",imp:2613,clicks:517,eng:23.6},
+    ad:null,
+    email:null,
+    website:{sessions:1245,landingViews:23,landingPct:1.83,downloads:22},
+    talkTrack:{title:"A Series of Uncertain Events",downloads:26,updatedDownloads:4,videoViews:10,webpageVisits:43},
+  },
+  {
+    id:"q2-2026", label:"3rd Edition", quarter:"Q2 2026", published:"Apr 20, 2026",
+    linkPost:{impSponsored:76893,impOrganic:1355,clicksSponsored:1137,clicksOrganic:96,engAll:2.5,engOrganic:7.1},
+    ttPost:{published:"Apr 21, 2026",imp:452,clicks:21,eng:4.6},
+    carousel:{published:"Apr 27, 2026",imp:582,clicks:149,eng:25.6},
+    ad:{impressions:62582,pageViews:33,followersGained:40,engagement:15.5,budget:500,lifecycleDays:10},
+    email:{published:"Apr 20, 2026",sentTo:43,opens:62.8,clicks:30.2},
+    website:{sessions:2420,landingViews:1437,landingPct:59.92,downloads:29},
+    talkTrack:{title:"UP+NS Merger Filing",downloads:14,videoViews:259,webpageVisits:29},
+  },
+  {
+    id:"q3-2026", label:"4th Edition", quarter:"Q3 2026", published:"Aug 24, 2026",
+    linkPost:{impSponsored:46562,impOrganic:504,clicksSponsored:1483,clicksOrganic:27,engAll:3.2,engOrganic:5.4},
+    ttPost:{published:"Aug 25, 2026",imp:313,clicks:15,eng:4.8},
+    carousel:{published:"Sep 2, 2026",imp:233,clicks:97,eng:41.6},
+    ad:{impressions:46562,pageViews:1,followersGained:1,engagement:3.2,budget:500,lifecycleDays:10,note:"Page views may reflect a tracking/loading error — 1 view off 46.5K impressions is far outside pattern"},
+    email:{published:"Aug 24, 2026",sentTo:83,opens:42.7,clicks:20.7},
+    website:{sessions:2783,landingViews:1560,landingPct:56.06,downloads:23},
+    talkTrack:{title:"4th Edition Episode",downloads:17,videoViews:27,webpageVisits:48},
+  },
+];
+
 // ── HELPERS ──
 const sumK=(a,k)=>a.reduce((s,x)=>s+(x[k]||0),0);
 const avgK=(a,k)=>a.length?sumK(a,k)/a.length:0;
 const fmt=n=>typeof n==="number"?n.toLocaleString():n;
 
-let platform="linkedin", period="ytd", podSeries="all";
+let platform="linkedin", period="ytd", podSeries="all", consistEdition="q3-2026";
 let charts={};
 
 function getPosts(){
@@ -407,7 +453,8 @@ function buildHTML(){
   let html=buildHeader()+buildTabs()+buildPills();
   if(platform==="linkedin") html+=buildLinkedin();
   else if(platform==="website") html+=buildWebsite();
-  else html+=buildPodcast();
+  else if(platform==="podcast") html+=buildPodcast();
+  else html+=buildConsist();
   html+=`<div style="text-align:center;margin-top:32px;padding-top:14px;border-top:1px solid ${C.border};font-size:9px;color:${C.t3}">Telegraph · Marketing Dashboard · LinkedIn + GA4 + Buzzsprout<br>Last updated ${LAST_UPDATED}</div>`;
   return html;
 }
@@ -440,11 +487,12 @@ function buildTabs(){
     <button class="tab-btn ${platform==="linkedin"?"active":""}" data-tab="linkedin">LinkedIn</button>
     <button class="tab-btn ${platform==="website"?"active":""}" data-tab="website">Website</button>
     <button class="tab-btn ${platform==="podcast"?"active":""}" data-tab="podcast">🎙 Podcast</button>
+    <button class="tab-btn ${platform==="consist"?"active":""}" data-tab="consist">🚂 Consist</button>
   </div>`;
 }
 
 function buildPills(){
-  if(platform==="podcast") return "";
+  if(platform==="podcast"||platform==="consist") return "";
   return `<div class="pill-row">
     <button class="pill ${period==="ytd"?"active":""}" data-period="ytd">2026 YTD</button>
     <button class="pill ${period==="jan"?"active":""}" data-period="jan">January</button>
@@ -799,6 +847,75 @@ function buildPodcast(){
   ${storyHTML("Podcast — Key Takeaways","Don't Dwell On It's legacy account now sits at <strong style='color:"+C.green+"'>1,082 all-time downloads</strong> (this account's history still mixes in some pre-split Talk Track episodes, so treat it as directional rather than DDOT-exclusive). Talk Track's standalone account has climbed to <strong style='color:"+C.green+"'>169 downloads since the May split</strong>, with August's merger-news coverage now firmly in the lead — Reading the Revised UP-NS Filing (32), Q3 2026 Freight Rail Forecast (23), and Freight vs Fiction (18) are the top performers. The Age of Visibility remains the all-time download leader at 298. Both shows' Buzzsprout Podcast Predictor forecasts point to steady, not explosive, growth for the next episode (20 for DDOT, 25 for Talk Track) — worth pairing each drop with a LinkedIn clip post, which has reliably outperformed the baseline forecast all year.")}`;
 }
 
+function buildConsist(){
+  const ed=CONSIST_EDITIONS.find(e=>e.id===consistEdition)||CONSIST_EDITIONS[CONSIST_EDITIONS.length-1];
+  const totalDownloads=sumK(CONSIST_EDITIONS.map(e=>e.website),"downloads");
+  const latest=CONSIST_EDITIONS[CONSIST_EDITIONS.length-1];
+
+  const editionPills=CONSIST_EDITIONS.map(e=>`<button class="pill ${consistEdition===e.id?"active":""}" data-consist-ed="${e.id}">${e.label} · ${e.quarter}</button>`).join("");
+
+  const statRow=(label,val,sub)=>`<div style="flex:1 1 130px;background:${C.bgDeep};border:1px solid ${C.border};border-radius:8px;padding:10px 12px">
+    <div style="font-size:9px;color:${C.t3};font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px">${label}</div>
+    <div style="font-size:15px;font-weight:800;color:${C.t1}">${val}</div>
+    ${sub?`<div style="font-size:9px;color:${C.t3};margin-top:2px">${sub}</div>`:""}
+  </div>`;
+
+  const sectionCard=(title,rows)=>`<div class="half-card">
+    <div style="font-size:11px;font-weight:700;color:${C.green};margin-bottom:10px">${title}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">${rows}</div>
+  </div>`;
+
+  const linkRows=statRow("Sponsored Imp",fmt(ed.linkPost.impSponsored))+statRow("Organic Imp",fmt(ed.linkPost.impOrganic))
+    +statRow("Sponsored Clicks",fmt(ed.linkPost.clicksSponsored))+statRow("Organic Clicks",fmt(ed.linkPost.clicksOrganic))
+    +statRow("Eng Rate (All)",ed.linkPost.engAll+"%")+statRow("Eng Rate (Organic)",ed.linkPost.engOrganic+"%");
+
+  const ttRows=(ed.ttPost.impSponsored!==undefined)
+    ? statRow("Sponsored Imp",fmt(ed.ttPost.impSponsored))+statRow("Organic Imp",fmt(ed.ttPost.impOrganic))+statRow("Sponsored Clicks",fmt(ed.ttPost.clicksSponsored))+statRow("Organic Clicks",fmt(ed.ttPost.clicksOrganic))+statRow("Eng Rate (All)",ed.ttPost.engAll+"%")+statRow("Eng Rate (Organic)",ed.ttPost.engOrganic+"%")
+    : statRow("Impressions",fmt(ed.ttPost.imp))+statRow("Clicks",fmt(ed.ttPost.clicks))+statRow("Eng Rate",ed.ttPost.eng+"%");
+
+  const carouselRows=statRow("Impressions",fmt(ed.carousel.imp))+statRow("Clicks",fmt(ed.carousel.clicks))+statRow("Eng Rate",ed.carousel.eng+"%");
+
+  const websiteRows=statRow("Total Sessions",fmt(ed.website.sessions),"2 wks post-launch")+statRow("Landing Page Views",fmt(ed.website.landingViews),ed.website.landingPct+"% of traffic")+statRow("File Downloads",fmt(ed.website.downloads));
+
+  const ttEpRows=statRow("Downloads",fmt(ed.talkTrack.downloads),ed.talkTrack.updatedDownloads?`+${ed.talkTrack.updatedDownloads} updated`:"")+statRow("Video Views",fmt(ed.talkTrack.videoViews))+statRow("Webpage Visits",fmt(ed.talkTrack.webpageVisits));
+
+  const adSection=ed.ad?sectionCard("Downloadable-Doc Ad ($500 · 10-day flight)",
+    statRow("Impressions",fmt(ed.ad.impressions))+statRow("Page Views",fmt(ed.ad.pageViews))+statRow("Followers Gained",fmt(ed.ad.followersGained))+statRow("Engagement",ed.ad.engagement+"%")
+    +(ed.ad.note?`<div style="width:100%;font-size:10px;color:${C.yellow};margin-top:4px">⚠ ${ed.ad.note}</div>`:"")):"";
+
+  const emailSection=ed.email?sectionCard("Email Blast",
+    statRow("Sent To",ed.email.sentTo+" recipients")+statRow("Open Rate",ed.email.opens+"%")+statRow("Click Rate",ed.email.clicks+"%")):"";
+
+  return `<div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">The Consist · Quarterly Content Report</span></div>
+  <div class="kpi-grid">
+    ${kpi("Editions Published",CONSIST_EDITIONS.length,"Since Q4 2025")}
+    ${kpi("Total Downloads Driven",fmt(totalDownloads),"Across all editions")}
+    ${kpi("Latest Carousel Eng",latest.carousel.eng+"%",latest.label+" · "+latest.quarter)}
+    ${kpi("Latest Landing Page Share",latest.website.landingPct+"%",latest.label+" · "+latest.quarter)}
+  </div>
+  ${secHTML("📊","Link Post Reach — Sponsored vs. Organic","Across all editions")}
+  <div class="card"><canvas id="chartConsistLink"></canvas></div>
+  ${secHTML("📈","Carousel + Consist TT Engagement Rate","Across all editions")}
+  <div class="card"><canvas id="chartConsistEng"></canvas></div>
+  ${secHTML("🌐","Landing Page Share of Website Traffic","Two weeks post-launch, by edition")}
+  <div class="card"><canvas id="chartConsistTraffic"></canvas></div>
+  ${secHTML("📄","Edition Detail")}
+  <div class="pill-row" style="margin-bottom:16px">${editionPills}</div>
+  <div style="text-align:center;margin-bottom:14px">
+    <span style="font-size:13px;font-weight:700;color:${C.t1}">${ed.label} — ${ed.quarter}</span>
+    <div style="font-size:10px;color:${C.t3};margin-top:2px">Link Post published ${ed.published}</div>
+  </div>
+  <div class="side-by-side">
+    ${sectionCard("Link Post",linkRows)}
+    ${sectionCard("Consist Talk Track Post",ttRows)}
+    ${sectionCard("Consist Carousel Post",carouselRows)}
+    ${sectionCard("Website Traffic",websiteRows)}
+    ${sectionCard(`Talk Track Episode — ${ed.talkTrack.title}`,ttEpRows)}
+    ${adSection}
+    ${emailSection}
+  </div>`;
+}
+
 function renderCharts(){
   Object.values(charts).forEach(c=>c.destroy()); charts={};
   const grid="rgba(42,51,98,0.8)";
@@ -843,12 +960,31 @@ function renderCharts(){
     const el=document.getElementById("chartPod");
     if(el) charts.pod=new Chart(el,{type:"line",data:{labels:POD_TREND_LABELS,datasets:[{label:"Downloads",data:POD_TREND,borderColor:C.green,backgroundColor:C.green+"22",borderWidth:2,pointRadius:3,fill:true,tension:.3}]},options:{...base,scales:{x:{ticks:{...tick,maxRotation:45,autoSkip:false},grid:{color:grid}},y:{ticks:tick,grid:{color:grid},beginAtZero:true}}}});
   }
+
+  if(platform==="consist"){
+    const labels=CONSIST_EDITIONS.map(e=>e.label.replace(" Edition","")+" · "+e.quarter);
+    const elLink=document.getElementById("chartConsistLink");
+    if(elLink) charts.consistLink=new Chart(elLink,{type:"line",data:{labels,datasets:[
+      {label:"Sponsored Imp",data:CONSIST_EDITIONS.map(e=>e.linkPost.impSponsored),borderColor:C.blue,backgroundColor:C.blue+"22",borderWidth:2,pointRadius:3,fill:true,tension:.3},
+      {label:"Organic Imp",data:CONSIST_EDITIONS.map(e=>e.linkPost.impOrganic),borderColor:C.periwinkle,backgroundColor:"transparent",borderWidth:2,pointRadius:3,tension:.3,yAxisID:"y1"},
+    ]},options:{...base,plugins:{...base.plugins,legend:{display:true,labels:{color:C.t3,font:{size:9}}}},scales:{x:{ticks:tick,grid:{color:grid}},y:{ticks:tick,grid:{color:grid}},y1:{position:"right",ticks:{...tick,color:C.periwinkle},grid:{display:false}}}}});
+
+    const elEng=document.getElementById("chartConsistEng");
+    if(elEng) charts.consistEng=new Chart(elEng,{type:"line",data:{labels,datasets:[
+      {label:"Carousel Eng %",data:CONSIST_EDITIONS.map(e=>e.carousel.eng),borderColor:C.green,backgroundColor:C.green+"22",borderWidth:2,pointRadius:3,fill:true,tension:.3},
+      {label:"Talk Track Post Eng %",data:CONSIST_EDITIONS.map(e=>e.ttPost.engOrganic!==undefined?e.ttPost.engOrganic:e.ttPost.eng),borderColor:C.periwinkle,backgroundColor:"transparent",borderWidth:2,pointRadius:3,tension:.3},
+    ]},options:{...base,plugins:{...base.plugins,legend:{display:true,labels:{color:C.t3,font:{size:9}}}},scales:{x:{ticks:tick,grid:{color:grid}},y:{ticks:tick,grid:{color:grid},beginAtZero:true}}}});
+
+    const elTraffic=document.getElementById("chartConsistTraffic");
+    if(elTraffic) charts.consistTraffic=new Chart(elTraffic,{type:"bar",data:{labels,datasets:[{label:"Landing Page Share %",data:CONSIST_EDITIONS.map(e=>e.website.landingPct),backgroundColor:C.green+"cc",borderRadius:3}]},options:{...base,scales:{x:{ticks:tick,grid:{color:grid}},y:{ticks:tick,grid:{color:grid},beginAtZero:true,max:70}}}});
+  }
 }
 
 function attachListeners(){
   document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{platform=b.dataset.tab;renderApp();}));
   document.querySelectorAll("[data-period]").forEach(b=>b.addEventListener("click",()=>{period=b.dataset.period;renderApp();}));
   document.querySelectorAll("[data-pod]").forEach(b=>b.addEventListener("click",()=>{podSeries=b.dataset.pod;renderApp();}));
+  document.querySelectorAll("[data-consist-ed]").forEach(b=>b.addEventListener("click",()=>{consistEdition=b.dataset.consistEd;renderApp();}));
 }
 
 renderApp();
