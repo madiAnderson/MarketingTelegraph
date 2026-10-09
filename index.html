@@ -270,54 +270,65 @@ const GA_25_MO=[
 ];
 
 // ── PODCAST DATA ──
-// Refreshed from Buzzsprout overview/apps/top-episodes exports pulled Sep 17, 2026.
-// DDOT's account is the original legacy Buzzsprout account and its "All Time" figures
-// still include some pre-split Talk Track episode history mixed in with DDOT's own —
-// flagged here rather than filtered out, since Buzzsprout doesn't split it cleanly.
-const POD_ALLTIME=1082, POD_LAST7=44, POD_LAST30=104, POD_LAST90=186, POD_PREDICTED_NEXT=20;
+const POD_UPDATED="October 9, 2026"; // change this when podcast data is refreshed
+// Refreshed from Buzzsprout overview, apps + episode download exports pulled Oct 9, 2026.
+// DDOT's account is the original legacy Buzzsprout account. Its all-time total (1,118) still
+// includes pre-split Talk Track episodes. Episode-level split, checked to the download:
+//   DDOT-only episodes = 781 · Talk Track episodes on legacy account = 337 · total = 1,118
+const POD_ALLTIME=1118, POD_DDOT_ONLY=781, POD_LAST7=4, POD_LAST30=80, POD_LAST90=179, POD_PREDICTED_NEXT=26;
 
-// Talk Track's standalone account (split off in May) — all-time reflects downloads
-// since the split only, not the show's full history (that legacy total, 298 downloads,
-// still lives on the old combined account under its original episode entries).
-const TT_ALLTIME=169, TT_LAST7=20, TT_LAST30=60, TT_LAST90=126, TT_PREDICTED_NEXT=25;
+// Talk Track's standalone account (split off in May). 217 all-time = 163 from episodes
+// released since the split + 54 from the pre-split back catalog mirrored onto this feed.
+// Pre-split episodes' main download history still lives on the legacy account (337).
+const TT_ALLTIME=217, TT_LAST7=2, TT_LAST30=79, TT_LAST90=172, TT_PREDICTED_NEXT=23;
 const TT_APPS=[
-  {app:"Apple Podcasts",         pct:42, count:43, color:"#FC3C44"},
-  {app:"Web Browser",            pct:20, count:20, color:"#6C9CFC"},
-  {app:"Buzzsprout Embed Player",pct:11, count:11, color:"#f59e0b"},
-  {app:"Spotify",                pct:7,  count:7,  color:"#1DB954"},
-  {app:"Unknown",                pct:7,  count:7,  color:"#5C6370"},
+  {app:"Apple Podcasts", pct:43, count:46, color:"#FC3C44"},
+  {app:"Web Browser",    pct:21, count:23, color:"#6C9CFC"},
+  {app:"Unknown",        pct:10, count:11, color:"#5C6370"},
+  {app:"Spotify",        pct:6,  count:6,  color:"#1DB954"},
+  {app:"Podcast Addict", pct:6,  count:6,  color:"#00BFFF"},
 ];
 const POD_APPS=[
-  {app:"Apple Podcasts", pct:42,count:67,color:"#FC3C44"},
-  {app:"Unknown",        pct:16,count:26,color:"#5C6370"},
-  {app:"Spotify",        pct:13,count:21,color:"#1DB954"},
-  {app:"Web Browser",    pct:11,count:17,color:"#6C9CFC"},
-  {app:"Podcast Addict", pct:5, count:8, color:"#00BFFF"},
+  {app:"Apple Podcasts",          pct:41,count:72,color:"#FC3C44"},
+  {app:"Unknown",                 pct:15,count:26,color:"#5C6370"},
+  {app:"Spotify",                 pct:13,count:23,color:"#1DB954"},
+  {app:"Web Browser",             pct:13,count:23,color:"#6C9CFC"},
+  {app:"Buzzsprout Embed Player", pct:6, count:10,color:"#FFD166"},
 ];
+// DDOT-only episodes from the legacy account (Talk Track episodes excluded). Sums to 781.
 const DDOT_EPS=[
   {title:"The Age of Visibility",              dl:298,date:"Jun '25"},
   {title:"Don't Dwell On It: Prototype",       dl:63, date:"Jan '25"},
-  {title:"Much Ado About Shipping",            dl:51, date:"Aug '25"},
-  {title:"(Rail)Car Talk",                     dl:38, date:"Jun '26"},
-  {title:"The Fast + the Cautious",            dl:38, date:"Mar '26"},
-  {title:"From RACS to Rail Leasing",          dl:37, date:"Jun '26"},
-  {title:"The Tell-Tale Yard",                 dl:37, date:"Oct '25"},
-  {title:"Rail in the Time of AI",             dl:35, date:"Dec '25"},
-  {title:"The Little Bet Club",                dl:35, date:"Feb '26"},
-  {title:"Lessor is More",                     dl:31, date:"May '26"},
-  {title:"As the Rail Turns",                  dl:25, date:"Jan '26"},
-  {title:"The Long + the Short of It",         dl:24, date:"Aug '26"},
+  {title:"Much Ado About Shipping",            dl:52, date:"Aug '25"},
+  {title:"(Rail)Car Talk",                     dl:44, date:"Jun '26"},
+  {title:"From RACS to Rail Leasing",          dl:44, date:"Jun '26"},
+  {title:"The Fast + the Cautious",            dl:44, date:"Mar '26"},
+  {title:"The Tell-Tale Yard",                 dl:40, date:"Oct '25"},
+  {title:"The Little Bet Club",                dl:40, date:"Feb '26"},
+  {title:"Rail in the Time of AI",             dl:39, date:"Dec '25"},
+  {title:"Lessor is More",                     dl:36, date:"May '26"},
+  {title:"The Long + the Short of It",         dl:33, date:"Aug '26"},
+  {title:"As the Rail Turns",                  dl:28, date:"Jan '26"},
+  {title:"Good Freight Hunting",               dl:20, date:"Sep '26"},
 ];
+// Talk Track episodes released on the standalone account since the May split. Sums to 163.
+// FLAG: Q3 2026 Freight Rail Forecast shows a Sep 10 publish date in Buzzsprout, but the
+// LinkedIn episode post went out Aug 25. Using Buzzsprout's date; confirm with Madi.
 const TT_EPS=[
-  {title:"Reading the Revised UP-NS Filing",              dl:32,date:"Aug '26"},
-  {title:"Q3 2026 Freight Rail Forecast",                 dl:23,date:"Aug '26"},
-  {title:"Freight Cycles Explained",                      dl:18,date:"Jul '26"},
-  {title:"Freight vs Fiction",                            dl:18,date:"Aug '26"},
-  {title:"Union Pacific + Norfolk Southern Merger Filing",dl:14,date:"May '26"},
+  {title:"Reading the Revised UP-NS Filing",              dl:35,date:"Aug '26"},
+  {title:"Q3 2026 Freight Rail Forecast",                 dl:25,date:"Sep '26"},
+  {title:"Freight Cycles Explained",                      dl:21,date:"Jul '26"},
+  {title:"Freight vs Fiction",                            dl:20,date:"Aug '26"},
+  {title:"STB Greenlights UPNS Merger Application",       dl:17,date:"Jun '26"},
+  {title:"Union Pacific + Norfolk Southern Merger Filing",dl:17,date:"May '26"},
+  {title:"UP-NS Merger Concessions + BNSF's Barstow Bet", dl:15,date:"Sep '26"},
+  {title:"Merger Update: CN Settlement + Q2 Earnings",    dl:13,date:"Jul '26"},
 ];
-// NOTE: monthly figures beyond April '26 aren't confirmed yet (Buzzsprout's custom-range
-// pull only gave us August's total of 62 downloads for the whole account, not a clean
-// May/Jun/Jul breakdown) — chart intentionally stops at Apr '26 until those are pulled.
+// FLAG (Oct 9): the Feb–Apr '26 values below (30, 34, 14) don't match Buzzsprout's DDOT
+// all-time curve, which reads roughly 85 / 56 / 75 for those months, and several 2025 points
+// look a month off. These values appear to have been read off the curve, not pulled as exact
+// monthly totals. Replace the full series once Custom-range monthly totals are pulled.
+// Monthly figures beyond April '26 are still not pulled, so the chart stops at Apr '26.
 const POD_TREND_LABELS=["Jan '25","Feb '25","Mar '25","Apr '25","May '25","Jun '25","Jul '25","Aug '25","Sep '25","Oct '25","Nov '25","Dec '25","Jan '26","Feb '26","Mar '26","Apr '26"];
 const POD_TREND=[58,4,4,4,65,55,10,82,83,62,100,92,85,30,34,14];
 
@@ -782,9 +793,14 @@ function buildPodcast(){
     </div>`;
   }).join("");
 
-  return `<div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">Don't Dwell On It · All Time</span></div>
+  return `<div style="text-align:center;margin-bottom:16px"><span style="font-size:15px;font-weight:700">Don't Dwell On It · All Time</span>
+    <div style="margin-top:8px"><div style="display:inline-flex;align-items:center;gap:5px;background:${C.bgCard};border:1px solid ${C.border};border-radius:20px;padding:4px 12px">
+      <span style="width:6px;height:6px;border-radius:50%;background:${C.yellow};display:inline-block"></span>
+      <span style="font-size:10px;color:${C.t3}">Podcast data updated: <strong style="color:${C.t2}">${POD_UPDATED}</strong></span>
+    </div></div>
+  </div>
   <div class="kpi-grid">
-    ${kpi("All-Time Downloads",fmt(POD_ALLTIME),"Since launch (legacy account)")}
+    ${kpi("All-Time Downloads",fmt(POD_ALLTIME),"Legacy account · "+fmt(POD_DDOT_ONLY)+" from DDOT episodes")}
     ${kpi("Last 30 Days",POD_LAST30,"Downloads")}
     ${kpi("Last 90 Days",POD_LAST90,"Downloads")}
     ${kpi("Last 7 Days",POD_LAST7,"Downloads")}
@@ -792,7 +808,7 @@ function buildPodcast(){
   <div class="kpi-grid">
     <div class="card" style="flex:1">
       <div class="kpi-label">Top Platform</div>
-      <div style="font-size:14px;font-weight:700;color:${C.t1}">🍎 Apple Podcasts <span style="color:${C.green}">42%</span> · 🟢 Spotify <span style="color:${C.green}">13%</span></div>
+      <div style="font-size:14px;font-weight:700;color:${C.t1}">🍎 Apple Podcasts <span style="color:${C.green}">41%</span> · 🟢 Spotify <span style="color:${C.green}">13%</span></div>
       <div class="kpi-sub">Last 5 episodes · Buzzsprout data</div>
     </div>
     <div class="card" style="flex:1">
@@ -801,9 +817,9 @@ function buildPodcast(){
       <div class="kpi-sub">Buzzsprout Podcast Predictor</div>
     </div>
   </div>
-  ${secHTML("📈","Monthly Download Trend","Jan 2025 to Apr 2026 · confirmed monthly totals — see note on chart data below")}
+  ${secHTML("📈","Monthly Download Trend","Jan 2025 to Apr 2026 · ⚠ under review: values don't match Buzzsprout's current curve, exact monthly totals pending")}
   <div class="card"><canvas id="chartPod"></canvas></div>
-  ${secHTML("🎙","Talk Track — Standalone Account","New Buzzsprout account · numbers reflect downloads since the May split, not full show history")}
+  ${secHTML("🎙","Talk Track — Standalone Account","New Buzzsprout account since the May split · pre-split episode history lives on the legacy account")}
   <div class="kpi-grid">
     ${kpi("All-Time Downloads",fmt(TT_ALLTIME),"Since account split")}
     ${kpi("Last 30 Days",TT_LAST30,"Downloads")}
@@ -844,7 +860,7 @@ function buildPodcast(){
       <div style="width:65px;text-align:right;font-size:11px;font-weight:700;color:${C.t1};flex-shrink:0">${a.pct}% <span style="color:${C.t3};font-weight:400">(${a.count})</span></div>
     </div>`).join("")}
   </div>
-  ${storyHTML("Podcast — Key Takeaways","Don't Dwell On It's legacy account now sits at <strong style='color:"+C.green+"'>1,082 all-time downloads</strong> (this account's history still mixes in some pre-split Talk Track episodes, so treat it as directional rather than DDOT-exclusive). Talk Track's standalone account has climbed to <strong style='color:"+C.green+"'>169 downloads since the May split</strong>, with August's merger-news coverage now firmly in the lead — Reading the Revised UP-NS Filing (32), Q3 2026 Freight Rail Forecast (23), and Freight vs Fiction (18) are the top performers. The Age of Visibility remains the all-time download leader at 298. Both shows' Buzzsprout Podcast Predictor forecasts point to steady, not explosive, growth for the next episode (20 for DDOT, 25 for Talk Track) — worth pairing each drop with a LinkedIn clip post, which has reliably outperformed the baseline forecast all year.")}`;
+  ${storyHTML("Podcast — Key Takeaways","Don't Dwell On It's legacy account is at <strong style='color:"+C.green+"'>1,118 all-time downloads</strong>. Pull out the pre-split Talk Track episodes and DDOT on its own accounts for <strong style='color:"+C.green+"'>781</strong>. The Age of Visibility still leads at 298, and the June run of (Rail)Car Talk + From RACS to Rail Leasing has climbed to 44 each, tied with The Fast + the Cautious. September's Good Freight Hunting is at 20 in its first month. Talk Track's standalone account grew from 169 to <strong style='color:"+C.green+"'>217</strong> since the last update and pulled 79 downloads in the last 30 days, nearly even with DDOT's 80 on a much smaller base. Merger coverage keeps leading: Reading the Revised UP-NS Filing (35) is the top episode, and the two September drops added 40 between them. Apple Podcasts is the top app for both shows (41% DDOT, 43% Talk Track). Buzzsprout forecasts 26 downloads for the next DDOT episode and 23 for Talk Track.")}`;
 }
 
 function buildConsist(){
